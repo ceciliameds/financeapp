@@ -1,11 +1,31 @@
 /* src/styles/dashboard.css */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2e3a59; /* Cor de fundo para todo o corpo */
+}
 
+/* Div principal (#root já ocupa 100% por padrão no React) */
+#root {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 /* Layout geral do dashboard */
 .dashboard {
     display: flex;
     flex-direction: column;
     padding: 20px;
     font-family: 'Arial', sans-serif;
+    background-color: white;
+    margin-top: 50%;
+    margin-bottom: 8%;
   }
   
   .dashboard-title {
