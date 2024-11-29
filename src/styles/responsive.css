@@ -1,0 +1,17 @@
+/* src/styles/responsive.css */
+
+/* Responsividade: ajusta o layout para telas menores */
+@media screen and (max-width: 768px) {
+    .charts-wrapper {
+      flex-direction: column;
+    }
+  
+    .chart-box {
+      width: 100%;
+    }
+  
+    .tables-wrapper .table-container {
+      padding: 15px;
+    }
+  }
+  

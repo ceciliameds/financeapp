@@ -1,0 +1,17 @@
+/* src/styles/dashboard.css */
+
+/* Layout geral do dashboard */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  

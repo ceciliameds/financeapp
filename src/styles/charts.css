@@ -1,0 +1,24 @@
+/* src/styles/charts.css */
+
+/* Contêiner dos gráficos */
+.charts-wrapper {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .chart-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 48%;
+  }
+  
+  .chart-box h3 {
+    font-size: 1.25rem;
+    color: #444;
+    margin-bottom: 10px;
+  }
+  
