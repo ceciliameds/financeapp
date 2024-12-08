@@ -7,7 +7,6 @@ import { EntryTable, ExitTable, SubscriptionTable, BankTable } from '../tables';
 import "../styles/dashboard.css";
 import "../styles/charts.css";
 import "../styles/tables.css";
-import "../styles/responsive.css";
 
 const Dashboard = () => {
   const [entries, setEntries] = useState([/* dados iniciais de entradas */]);

@@ -1,0 +1,36 @@
+.apresentation {
+    padding: 170px 0;
+  }
+  
+  .info {
+    padding: 70;
+    text-align: left;
+    margin-left:40px;
+    font-size: 45px
+  }
+  
+  @media (max-width: 800px) {
+    .descricao {
+      padding: 35px 0;
+    }
+  }
+  
+  .descricao {
+    text-align: left;
+    margin-left:40px;
+    font-size: 25px
+  }
+  
+  .descricao h3::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 265px;
+  }
+  
+  @media (max-width: 800px) {
+    .descricao h3::before {
+      width: 20rem;
+    }
+  }
+  

@@ -1,20 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import '../styles/navbar.css'; 
+import React from "react";
+import { Link } from "react-router-dom";
+import "../styles/navbar.css";
 
-const Navbar = () => {
+function Navbar() {
   return (
-    <nav className="navbar">
-      <div className="navbar-logo">
-        <h2>FinanceApp</h2>
+    <header className="header">
+      <div className="container">
+        <div className="main-content">
+          <div className="header-main">
+            <h3 className="header-main-logo">FinanceApp</h3>
+            <nav>
+              <ul className="menu">
+                <li className="menu-item">
+                  <a href="#sobre" className="menu-item-link">
+                    Sobre
+                  </a>
+                </li>
+                <li className="menu-item">
+                  <Link to="/login" className="menu-item-link">
+                    Entrar
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
       </div>
-      <div className="navbar-links">
-        <Link to="/login" className="navbar-login-button">
-          Entrar
-        </Link>
-      </div>
-    </nav>
+    </header>
   );
-};
+}
 
 export default Navbar;

@@ -1,13 +1,3 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #2e3a59; /* Cor de fundo para todo o corpo */
-}
-
 /* Div principal (#root já ocupa 100% por padrão no React) */
 #root {
   height: 100%;

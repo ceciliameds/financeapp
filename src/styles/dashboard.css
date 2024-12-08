@@ -1,37 +1,127 @@
-/* src/styles/dashboard.css */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+@import url("https://fonts.googleapis.com/css2?family=Righteous&family=Sarala:wght@400;700&display=swap");
+
+.hero {
+  height: 100vh;
+  width: 100vw; /* Garantindo que ocupe toda a largura da tela */
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #2e3a59; /* Cor de fundo para todo o corpo */
+  position: relative;
+  padding-top: 60px; /* Ajusta o espaço para não sobrepor à navbar */
+  background-color: var(--cor-fundo-claro);
+  overflow: hidden; /* Previne transbordamento de conteúdo */
 }
 
-/* Div principal (#root já ocupa 100% por padrão no React) */
-#root {
-  height: 100%;
-  width: 100%;
+.hero-main {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  width: 100%; /* Garantir largura total */
+  gap: 50px;
+  padding: 0 20px;
 }
-/* Layout geral do dashboard */
-.dashboard {
-    display: flex;
+
+.hero-main-content {
+  max-width: 600px;
+  text-align: left;
+}
+
+.hero-main-content h1 {
+  font-family: var(--righteous);
+  font-size: 64px;
+  color: var(--cor-fonte-escura);
+  margin-bottom: 20px;
+}
+
+.hero-main-content h2 {
+  font-size: 24px;
+  color: var(--cor-fonte-escura);
+  margin-bottom: 34px;
+}
+
+.btn-hero-main-content {
+  background: var(--cor-principal);
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 24px;
+  /* color: var(--cor-fonte-clara); */
+  text-decoration: none;
+  transition: 0.3s all ease-in-out;
+}
+
+.btn-hero-main-content:hover {
+  background: var(--cor-marca-claro);
+  color: var(--cor-principal);
+}
+
+.hero-main-img img {
+  max-width: 100%; /* Garante que a imagem ocupe toda a largura */
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease-in-out;
+}
+
+.hero-main-img img:hover {
+  transform: scale(1.05);
+}
+
+/* Description Section */
+.desc {
+  padding: 75px 20px;
+  background-color: var(--cor-fundo-escuro); /* Fundo escuro */
+  text-align: center;
+  width: 100vw; /* Garante que ocupe toda a largura da tela */
+  margin-top: 0; /* Remove margens extras */
+}
+
+.desc h3 {
+  /* font-family: var(--righteous); */
+  font-size: 30px;
+  color: var(--cor-fonte-clara);
+  margin-bottom: 31px;
+}
+
+.desc-list p {
+  font-size: 18px;
+  color: var(--cor-fonte-clara);
+  margin-bottom: 10px;
+}
+
+.desc-list p strong {
+  color: var(--cor-fonte-clara);
+}
+
+
+
+/* Media Queries */
+@media (max-width: 800px) {
+  .hero-main {
     flex-direction: column;
-    padding: 20px;
-    font-family: 'Arial', sans-serif;
-    background-color: white;
-    margin-top: 50%;
-    margin-bottom: 8%;
-  }
-  
-  .dashboard-title {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 20px;
     text-align: center;
   }
-  
+
+  .hero-main-content h1 {
+    font-size: 34px;
+  }
+
+  .hero-main-content h2 {
+    font-size: 18px;
+  }
+
+  .btn-hero-main-content {
+    font-size: 16px;
+    padding: 10px 20px;
+  }
+
+  .hero-main-img img {
+    max-width: 80%;
+  }
+
+  .desc h3 {
+    font-size: 20px;
+  }
+
+  .desc-list p {
+    font-size: 14px;
+  }
+}

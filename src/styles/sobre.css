@@ -1,0 +1,30 @@
+.container-sobre {
+  background-color: #ececfa;
+}
+.info-content {
+  text-align: left;
+  margin-bottom: 20px;
+}
+.info-content h3 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  padding: 20px;
+}
+.info-content h4 {
+  font-size: 24px;
+  text-align: left;
+  padding: 20px;
+
+}
+.info-content p {
+  font-size: 16px;
+}
+.info-content li {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+}
