@@ -1,5 +1,7 @@
 .container-sobre {
   background-color: #ececfa;
+  display: flex;
+
 }
 .info-content {
   text-align: left;
