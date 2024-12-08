@@ -1,5 +1,6 @@
 import React from 'react';
 import "../styles/apresentation.css"
+import apresentation from "../assets/apresentation.png";
 
 function Apresentation() {
   return (
@@ -10,6 +11,9 @@ function Apresentation() {
           <p className='descricao'>
             A melhor forma para organizar suas finanças.
           </p>
+        </div>
+        <div>
+        <img src={apresentation} alt="Ícone Controle de Gastos"/> 
         </div>
       </div>
     </section>

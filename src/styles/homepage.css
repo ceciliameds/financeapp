@@ -11,11 +11,9 @@
   --cor-marca-claro: #cccff4;
   --azul-claro: #a6b0eb;
   --branco: #fff;
-  --footer: #2331f1; 
 }
 
 * {
-
   font-family: var(--sarala);
 }
 
