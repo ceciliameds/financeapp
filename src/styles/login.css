@@ -1,49 +1,56 @@
-/* Div principal (#root já ocupa 100% por padrão no React) */
-#root {
-  height: 100%;
-  width: 100%;
+.login-wrapper {
+  height: 100vh;
+  width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: #f7f7fc; 
+  position: relative;
 }
 
-/* Container do card */
+/* Botão de voltar */
+/* .back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-transform: uppercase;
+} */
+
 .card {
-  background: rgba(255, 255, 255, 0.1); /* Fundo semitransparente */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Borda sutil */
-  border-radius: 15px; /* Borda arredondada */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
   padding: 20px;
   width: 350px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Sombra */
-  backdrop-filter: blur(10px); /* Efeito de desfoque no fundo */
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Ícone do perfil */
 .profile-icon {
   width: 80px;
   height: 80px;
-  background-color: #4a634f; /* Fundo do ícone */
-  border-radius: 50%; /* Forma circular */
+  background-color: #f5f5fa;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white; /* Cor do ícone */
-  font-size: 40px; /* Tamanho do ícone */
+  font-size: 40px;
   margin-bottom: 20px;
 }
 
-/* Título do formulário */
 .card h2 {
   font-size: 1.5rem;
-  color: white;
+  color: #555;
   margin-bottom: 20px;
 }
 
-/* Inputs do formulário */
-.card input {
+/* .card input {
   margin: 10px 0;
   padding: 10px;
   border-radius: 5px;
@@ -52,9 +59,8 @@
   height: 40px;
   font-size: 1rem;
   box-sizing: border-box;
-}
+} */
 
-/* Botão de submit */
 .card .submit {
   margin-top: 20px;
   padding: 10px;
@@ -62,29 +68,38 @@
   border: none;
   width: 100%;
   height: 40px;
-  background-color: #4a634f; /* Verde escuro */
-  color: white;
+  background-color: #383838;
+  color: #f5f5fa;
   cursor: pointer;
   font-size: 1rem;
   text-transform: uppercase;
 }
 
-/* Opções adicionais (lembre-me e esqueci minha senha) */
-.card-options {
+.submit:hover {
+  background-color: #555; 
+}
+
+.input-group {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  font-size: 0.9rem;
-  margin-top: 10px;
-  color: #ccc;
+  align-items: center;
+  margin: 10px 0;
+  background: #fff; 
+  border-radius: 5px; 
+  padding: 5px 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); 
 }
 
-.card-options a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
+.input-group input {
+  border: none; 
+  outline: none;
+  flex: 1;
+  font-size: 1rem;
+  padding: 10px;
 }
 
-.card-options a:hover {
-  text-decoration: underline;
+.input-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px; 
 }
+

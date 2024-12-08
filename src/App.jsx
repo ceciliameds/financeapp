@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./components/HomePage";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import AddTransaction from "./AddTransaction";
 
 function App() {
   const [transactions, setTransactions] = useState([
@@ -22,7 +21,6 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard transactions={transactions} />}/>
-          <Route path="/addtransaction" element={<AddTransaction onAddTransaction={handleAddTransaction} />}/>
         </Routes>
       </div>
     </Router>
