@@ -1,11 +1,12 @@
 .container-sobre {
   background-color: #ececfa;
   display: flex;
-
+  width: 100%;
 }
 .info-content {
   text-align: left;
   margin-bottom: 20px;
+  width: 100%;
 }
 .info-content h3 {
   font-size: 24px;

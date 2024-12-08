@@ -15,7 +15,7 @@ function Sobre() {
             O FinanceApp foi projetado para atender às necessidades de pessoas que desejam:
           </p>
           <ul>
-            <li className="info-content">Acompanhar seus gastos e receitas em tempo real.</li>
+            <li>Acompanhar seus gastos e receitas em tempo real.</li>
             <li>Criar metas financeiras e monitorar o progresso.</li>
             <li>Identificar onde é possível economizar.</li>
             <li>Planejar um orçamento mensal ou anual com base em suas prioridades.</li>
