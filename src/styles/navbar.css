@@ -2,18 +2,50 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  /* background-color: blue; */
+  background-color: #f5f5fa; 
+  padding: 10px 40px; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  width: 100%; 
+  position: fixed; 
+  top: 0;
+  left: 0;
+  z-index: 1000; 
+}
+
+.header-main-logo{
+  color:#333;
+}
+
+.header-container {
+  width: 100%; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu {
+  display: flex; 
+  gap: 15px; 
+  list-style: none; 
+  margin: 0; 
+  padding: 0; 
+}
+
+.menu-item {
+  margin: 0;
 }
 
 .menu-item-link {
-  font-size: 16px; /* Ajusta o tamanho da fonte */
-  padding: 10px 15px; /* Adiciona espaçamento ao redor dos links */
-  color: #03032b; /* Cor consistente com o tema */
-  text-decoration: none; /* Remove o sublinhado */
-  transition: color 0.3s;
+  font-size: 16px; 
+  padding: 8px 15px; 
+  color: #03032b; 
+  text-decoration-color: #03032b; 
+  transition: all 0.3s ease; 
 }
 
 .menu-item-link:hover {
-  color: var(--cor-marca-medio); /* Adiciona um efeito de hover */
+  text-decoration-color: #87878d; 
+  color: #87878d; 
 }

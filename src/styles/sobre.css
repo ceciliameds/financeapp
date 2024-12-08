@@ -1,43 +1,45 @@
 .container-sobre {
-  background-color:#c8c8d1;
-  padding: 60px 0; /* Padding ajustado para espaçamento vertical */
-  width: 100vw; /* Ocupa 100% da largura da janela */
-  margin: 0; /* Remove margens que podem desalinhá-lo */
-  box-sizing: border-box; /* Certifica que o padding não afeta a largura total */
+  background-color: #c8c8d1; 
+  padding: 60px 40px; 
+  width: 100vw; 
+  margin: 0; 
+  display: flex;
+  flex-direction: column; 
+  box-sizing: border-box; 
   text-align: center;
 }
-  
+
 .info-content {
-  max-width: 1200px; /* Limita o conteúdo a uma largura fixa */
-  margin: 0 auto; /* Centraliza o conteúdo */
+  max-width: 1200px; 
+  margin: 0 auto; 
 }
 
 .cases-title {
   font-size: 28px;
   margin-bottom: 40px;
-  color: #fff; /* Deixa o texto visível no fundo azul */
+  color: #fff; 
   text-align: center;
 }
 
 .cases-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Garante três colunas uniformes */
-  gap: 20px; /* Espaçamento entre os cartões */
-  max-width: 1200px; /* Limita a largura do grid */
-  margin: 0 auto; /* Centraliza o grid dentro do container */
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 20px; 
+  max-width: 1200px; 
+  margin: 0 auto; 
 }
 
 .case-card {
-  background-color: #fff; /* Fundo branco para contraste */
+  background-color: #fff; 
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 8px; 
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
   text-align: center;
-  transition: transform 0.3s ease; /* Adiciona um efeito ao passar o mouse */
+  transition: transform 0.3s ease; 
 }
 
 .case-card:hover {
-  transform: translateY(-10px); /* Eleva o cartão ao passar o mouse */
+  transform: translateY(-10px); 
 }
 
 .case-logo {
@@ -53,7 +55,7 @@
 
 @media (max-width: 800px) {
   .cases-grid {
-    grid-template-columns: 1fr; /* Alinha os cards em uma única coluna em telas menores */
+    grid-template-columns: 1fr; 
     gap: 20px;
   }
 }

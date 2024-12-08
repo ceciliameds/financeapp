@@ -1,13 +1,9 @@
-/* src/styles/tables.css */
-
-/* Contêiner das tabelas */
 .tables-wrapper {
     display: flex;
     flex-direction: column;
     gap: 30px;
   }
   
-  /* Estilos gerais para as tabelas */
   .table-container {
     background-color: #fff;
     padding: 20px;
@@ -21,7 +17,6 @@
     margin-bottom: 10px;
   }
   
-  /* Estilos específicos para as tabelas */
   table {
     width: 100%;
     border-collapse: collapse;

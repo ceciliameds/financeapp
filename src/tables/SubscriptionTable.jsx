@@ -1,4 +1,3 @@
-// src/tables/SubscriptionTable.js
 import React from "react";
 
 const SubscriptionTable = ({ subscriptions, setSubscriptions, subscriptionValues, setSubscriptionValues }) => {

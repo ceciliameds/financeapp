@@ -1,17 +1,29 @@
 .footer {
   background-color: #f5f5fa;
-  padding: 40px 20px; /* Aumenta o padding */
+  padding: 30px 15px; 
   text-align: center;
   font-size: 14px;
   color: #555;
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.container {
+  max-width: 1200px; 
+  margin: 0 auto; 
+  padding: 0 15px; 
 }
 
 .footer-copy {
-  margin-top: 10px; /* Adiciona espaçamento superior */
+  margin-top: 10px; 
 }
 
 @media (max-width: 800px) {
   .footer {
     padding: 20px;
+  }
+
+  .container {
+    padding: 0 10px; 
   }
 }

@@ -1,111 +1,131 @@
-import React, { useState, useEffect } from "react";
-import { Bar } from "react-chartjs-2";
-import { Pie } from "react-chartjs-2";
-import { dataCategory, options } from "../charts"; // Importando os gráficos
-import { EntryTable, ExitTable, SubscriptionTable, BankTable } from '../tables'; // Importação centralizada
+import React, { useState } from "react";
+import { Bar, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+
+import Assinaturas from "../components/crud/Assinaturas";
+import Gastos from "../components/crud/Gastos";
 
 import "../styles/dashboard.css";
 import "../styles/charts.css";
-import "../styles/tables.css";
+import "../styles/crud.css";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  ArcElement,
+  Tooltip,
+  Legend
+);
 
 const Dashboard = () => {
-  const [entries, setEntries] = useState([/* dados iniciais de entradas */]);
-  const [exits, setExits] = useState([/* dados iniciais de saídas */]);
-  const [subscriptions, setSubscriptions] = useState([/* dados iniciais de assinaturas */]);
-  const [bankDetails, setBankDetails] = useState([/* dados iniciais de bancos */]);
-  const [entryValues, setEntryValues] = useState({ fonte: "", valor: "", data: "" });
-  const [exitValues, setExitValues] = useState({ categoria: "", valor: "", data: "", bancoId: "" });
-  const [subscriptionValues, setSubscriptionValues] = useState({ nome: "", valor: "", vencimento: "" });
-  const [bankValues, setBankValues] = useState({ nome: "", saldo: "", entradas: "", saídas: "" });
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [exits, setExits] = useState([]);
+  const [bankDetails, setBankDetails] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-  // Função para calcular os gastos por banco (somando entradas e saídas)
-  const calculateBankExpenses = (bankDetails) => {
-    const bankExpenseMap = {};
+  const calculateCategoryExpenses = () => {
+    if (!categories || !exits) return { labels: [], datasets: [] };
 
-    // Soma as saídas e entradas por banco
-    exits.forEach(exit => {
-      const bankName = exit.bancoId; // bancoId é o identificador do banco
-      const amount = exit.valor;
-
-      if (!bankExpenseMap[bankName]) {
-        bankExpenseMap[bankName] = 0;
+    const categoryExpenseMap = {};
+    exits.forEach((exit) => {
+      const categoryName =
+        categories.find((cat) => cat.id === exit.categoria)?.type || "Outros";
+      if (!categoryExpenseMap[categoryName]) {
+        categoryExpenseMap[categoryName] = 0;
       }
-
-      bankExpenseMap[bankName] += amount;
+      categoryExpenseMap[categoryName] += exit.valor;
     });
-
-    // Adiciona os dados de entrada por banco
-    entries.forEach(entry => {
-      const bankName = entry.fonte; // Aqui, a entrada é associada ao campo "fonte" (nome do banco ou fonte de entrada)
-      const amount = entry.valor;
-
-      if (!bankExpenseMap[bankName]) {
-        bankExpenseMap[bankName] = 0;
-      }
-
-      bankExpenseMap[bankName] += amount;
-    });
-
-    // Criação do gráfico com os gastos por banco
-    const labels = Object.keys(bankExpenseMap);
-    const data = Object.values(bankExpenseMap);
 
     return {
-      labels: labels,
-      datasets: [{
-        data: data,
-        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#F7464A'], // Cores para os segmentos do gráfico
-        hoverBackgroundColor: ['#FF7D9C', '#4C8DCC', '#FFDD6B', '#4FD4D4', '#FF7F84'],
-      }]
+      labels: Object.keys(categoryExpenseMap),
+      datasets: [
+        {
+          label: "Gastos por Categoria",
+          data: Object.values(categoryExpenseMap),
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#F7464A",
+          ],
+        },
+      ],
     };
   };
 
-  const bankChartData = calculateBankExpenses(bankDetails);
+  const calculateBankExpenses = () => {
+    if (!bankDetails || !exits) return { labels: [], datasets: [] };
+
+    const bankExpenseMap = {};
+    exits.forEach((exit) => {
+      const bankName =
+        bankDetails.find((bank) => bank.id === exit.bancoId)?.nome || "Outros";
+      if (!bankExpenseMap[bankName]) {
+        bankExpenseMap[bankName] = 0;
+      }
+      bankExpenseMap[bankName] += exit.valor;
+    });
+
+    return {
+      labels: Object.keys(bankExpenseMap),
+      datasets: [
+        {
+          data: Object.values(bankExpenseMap),
+          backgroundColor: [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56",
+            "#4BC0C0",
+            "#F7464A",
+          ],
+        },
+      ],
+    };
+  };
+
+  const categoryChartData = calculateCategoryExpenses();
+  const bankChartData = calculateBankExpenses();
 
   return (
     <div className="dashboard">
       <h2 className="dashboard-title">Dashboard de Gastos</h2>
 
-      {/* Gráficos */}
       <div className="charts-wrapper">
         <div className="chart-box">
-          <h3>Gastos Mensais por Categoria</h3>
-          <Bar data={dataCategory} options={options} />
+          <h3>Gastos por Categoria</h3>
+          <Bar data={categoryChartData} options={{ responsive: true }} />
         </div>
-
         <div className="chart-box">
           <h3>Gastos por Banco</h3>
-          <Pie data={bankChartData} options={options} />
+          <Pie data={bankChartData} options={{ responsive: true }} />
         </div>
       </div>
 
-      {/* Tabelas */}
-      <div className="tables-wrapper">
-        <EntryTable 
-          entries={entries} 
-          setEntries={setEntries} 
-          entryValues={entryValues} 
-          setEntryValues={setEntryValues} 
-        />
-        <ExitTable 
-          exits={exits} 
-          setExits={setExits} 
-          exitValues={exitValues} 
-          setExitValues={setExitValues} 
-          bankDetails={bankDetails} 
-        />
-        <SubscriptionTable 
-          subscriptions={subscriptions} 
-          setSubscriptions={setSubscriptions} 
-          subscriptionValues={subscriptionValues} 
-          setSubscriptionValues={setSubscriptionValues} 
-        />
-        <BankTable 
-          bankDetails={bankDetails} 
-          setBankDetails={setBankDetails} 
-          bankValues={bankValues} 
-          setBankValues={setBankValues} 
-        />
+      <div className="crud-wrapper">
+        <div className="crud-section">
+          <Assinaturas
+            subscriptions={subscriptions}
+            setSubscriptions={setSubscriptions}
+          />
+        </div>
+        <div className="crud-section">
+          <Gastos
+            exits={exits}
+            setExits={setExits}
+            categories={categories}
+            bankDetails={bankDetails}
+          />
+        </div>
       </div>
     </div>
   );
