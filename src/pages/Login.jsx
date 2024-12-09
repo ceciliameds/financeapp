@@ -4,7 +4,7 @@ import "../styles/login.css";
 import User from "../assets/icons/user.png";
 import Lock from "../assets/icons/lock.png";
 import Email from "../assets/icons/email.png";
-import Voltar from "../assets/icons/voltar.png";
+import { Link } from "react-router-dom"; 
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -22,10 +22,7 @@ function Login() {
 
   return (
     <div className="login-wrapper">
-      {/* <button className="back-button" onClick={() => navigate("/")}>
-        <img src={Voltar} alt="Lock Icon" />
-      </button> */}
-      <div className="card">
+      <div className="login-card">
         <div className="profile-icon">
           <img src={User} alt="User" />
         </div>
@@ -53,6 +50,13 @@ function Login() {
             Entrar
           </button>
         </form>
+
+        <div className="signup-link">
+          <p>
+            Não tem uma conta?{" "}
+            <Link to="/register" className="link">Cadastre-se</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

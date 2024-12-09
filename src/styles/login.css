@@ -103,3 +103,13 @@
   margin-right: 10px; 
 }
 
+/* Adicione ou verifique o seguinte estilo em seu arquivo login.css */
+.link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link:hover {
+  text-decoration: none;
+}

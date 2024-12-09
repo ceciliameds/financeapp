@@ -1,0 +1,101 @@
+/* Wrapper para centralizar o card na tela */
+.register-wrapper {
+    height: 100vh; /* Altura total da tela */
+    width: 100vw;  /* Largura total da tela */
+    display: flex;
+    justify-content: center;  /* Centraliza horizontalmente */
+    align-items: center;      /* Centraliza verticalmente */
+    background-color: #f7f7fc;
+    position: relative;
+  }
+  
+  /* Card de registro */
+  .register-card {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    width: 400px; /* Largura do card */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza o conteúdo verticalmente dentro do card */
+    align-items: center;     /* Centraliza o conteúdo horizontalmente dentro do card */
+    max-width: 100%;
+    max-height: 80vh;         /* Limita a altura do card */
+    text-align: center;       /* Centraliza o texto */
+    background-color: #fff;   /* Fundo branco para o card */
+    padding-top: 30px;        /* Espaço superior */
+    padding-bottom: 30px;     /* Espaço inferior */
+  }
+  
+  /* Título dentro do card */
+  .register-card h2 {
+    font-size: 1.5rem;
+    color: #555;
+    margin-bottom: 20px;
+  }
+  
+  /* Ajustes nos inputs */
+  .input-group {
+    display: flex;
+    flex-direction: column; /* Alinha os inputs de forma vertical */
+    align-items: stretch;   /* Estica os inputs para preencher a largura do card */
+    margin: 10px 0;         /* Margem ajustada para melhorar o espaçamento */
+    background: #fff;
+    border-radius: 5px;
+    padding: 5px 20px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  
+  /* Ajuste na largura e altura dos inputs */
+  .input-group input {
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 6px 10px;  /* Reduzido o padding para diminuir a altura */
+    height: 35px;       /* Ajustada a altura para 35px */
+    width: 100%;        /* Largura total dentro do card */
+    margin-bottom: 10px; /* Espaçamento entre inputs */
+  }
+  
+  /* Ajustes adicionais para o botão de submit */
+  .submit {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+    height: 40px;
+    background-color: #383838;
+    color: #f5f5fa;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+  }
+  
+  .submit:hover {
+    background-color: #555;
+  }
+  
+  /* Link de login */
+  .signup-link {
+    margin-top: 20px;
+  }
+  
+  .signup-link p {
+    color: #555;
+  }
+  
+  .link {
+    color: #555;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .link:hover {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
