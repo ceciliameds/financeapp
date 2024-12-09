@@ -1,46 +1,138 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
 import Delete from "../../assets/icons/delete.png";
 import Edit from "../../assets/icons/edit.png";
+import "../../styles/gastos.css";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Gastos() {
   const [exits, setExits] = useState([]);
+  const [assinaturas, setAssinaturas] = useState([]);
   const [categories, setCategories] = useState([
     { id: 1, type: "Alimentação" },
     { id: 2, type: "Saúde" },
+    { id: 3, type: "Lazer" },
+    { id: 4, type: "Estudo" },
+    { id: 5, type: "Transporte" },
+    { id: 6, type: "Viagens" },
+    { id: 7, type: "Moradia" },
+    { id: 8, type: "Assinaturas" },
+    { id: 9, type: "Outros" },
   ]);
+
   const [banks, setBanks] = useState([
-    { id: 1, nome: "Nubank" },
-    { id: 2, nome: "Santander" },
+    { id: 1, name: "Nubank" },
+    { id: 2, name: "Banco do Brasil" },
+    { id: 3, name: "Itaú" },
+    { id: 4, name: "Santander" },
+    { id: 5, name: "Bradesco" },
+    { id: 6, name: "Caixa" },
+    { id: 7, name: "Inter" },
+    { id: 8, name: "Original" },
+    { id: 9, name: "Next" },
+    { id: 10, name: "Outros" },
   ]);
 
   const [form, setForm] = useState({
     categoria: "",
     nome: "",
-    banco: "",
     valor: "",
     data: "",
+    banco: "",
   });
 
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
-  const [isCategoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [isBankModalOpen, setBankModalOpen] = useState(false);
+  const [categoryChartData, setCategoryChartData] = useState({});
+  const [bankChartData, setBankChartData] = useState({});
 
-  const [newCategory, setNewCategory] = useState("");
-  const [newBank, setNewBank] = useState("");
+  // Geração de cores únicas
+  const generateColors = (count) => {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      const hue = (i * 360) / count;
+      colors.push(`hsl(${hue}, 70%, 60%)`);
+    }
+    return colors;
+  };
+
+  useEffect(() => {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+  
+    // Filtrar gastos do mês atual
+    const monthlyExits = exits.filter((gasto) => {
+      const gastoDate = new Date(gasto.data);
+      return (
+        gastoDate.getMonth() + 1 === currentMonth &&
+        gastoDate.getFullYear() === currentYear
+      );
+    });
+  
+    // Totais por categoria
+    const categoryTotals = {};
+    monthlyExits.forEach((gasto) => {
+      if (!categoryTotals[gasto.categoria]) {
+        categoryTotals[gasto.categoria] = 0;
+      }
+      categoryTotals[gasto.categoria] += parseFloat(gasto.valor || 0);
+    });
+  
+    // Totais por banco
+    const bankTotals = {};
+    monthlyExits.forEach((gasto) => {
+      if (!bankTotals[gasto.banco]) {
+        bankTotals[gasto.banco] = 0;
+      }
+      bankTotals[gasto.banco] += parseFloat(gasto.valor || 0);
+    });
+  
+    // Gerar cores
+    const categoryColors = generateColors(Object.keys(categoryTotals).length);
+    const bankColors = generateColors(Object.keys(bankTotals).length);
+  
+    // Atualizar dados do gráfico
+    setCategoryChartData({
+      labels: Object.keys(categoryTotals),
+      datasets: [
+        {
+          label: "Gastos por Categoria",
+          data: Object.values(categoryTotals),
+          backgroundColor: categoryColors,
+          borderColor: "#ffffff",
+          borderWidth: 1,
+        },
+      ],
+    });
+  
+    setBankChartData({
+      labels: Object.keys(bankTotals),
+      datasets: [
+        {
+          label: "Gastos por Banco",
+          data: Object.values(bankTotals),
+          backgroundColor: bankColors,
+          borderColor: "#ffffff",
+          borderWidth: 1,
+        },
+      ],
+    });
+  }, [exits, categories, banks]);
 
   const handleAddExpense = () => {
-    if (
-      !form.categoria ||
-      !form.banco ||
-      !form.nome ||
-      !form.valor ||
-      !form.data
-    ) {
+    if (!form.categoria || !form.nome || !form.valor || !form.data || !form.banco) {
       alert("Por favor, preencha todos os campos!");
       return;
     }
+
     if (isEditing) {
       const updatedExits = [...exits];
       updatedExits[editIndex] = form;
@@ -50,7 +142,8 @@ function Gastos() {
     } else {
       setExits([...exits, { ...form }]);
     }
-    setForm({ categoria: "", nome: "", banco: "", valor: "", data: "" });
+
+    setForm({ categoria: "", nome: "", valor: "", data: "", banco: "" });
   };
 
   const handleDeleteExpense = (index) => {
@@ -64,43 +157,32 @@ function Gastos() {
     setEditIndex(index);
   };
 
-  const handleAddCategory = () => {
-    if (!newCategory.trim()) {
-      alert("Insira um nome válido para a categoria.");
-      return;
-    }
-    setCategories([
-      ...categories,
-      { id: categories.length + 1, type: newCategory },
-    ]);
-    setNewCategory("");
-    setCategoryModalOpen(false);
-  };
-
-  const handleAddBank = () => {
-    if (!newBank.trim()) {
-      alert("Insira um nome válido para o banco.");
-      return;
-    }
-    setBanks([...banks, { id: banks.length + 1, nome: newBank }]);
-    setNewBank("");
-    setBankModalOpen(false);
-  };
-
   return (
     <div className="gastos">
-      <h2>Gastos</h2>
+      <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
+        <div style={{ width: "45%" }}>
+          <h3>Gastos por Categoria</h3>
+          {categoryChartData.labels ? (
+            <Pie data={categoryChartData} />
+          ) : (
+            <p>Nenhum dado disponível</p>
+          )}
+        </div>
+        <div style={{ width: "45%" }}>
+          <h3>Gastos por Banco</h3>
+          {bankChartData.labels ? (
+            <Pie data={bankChartData} />
+          ) : (
+            <p>Nenhum dado disponível</p>
+          )}
+        </div>
+      </div>
+
+      <h2>Adicionar Gasto</h2>
       <div className="form-group">
-        {/* Select de Categoria */}
         <select
           value={form.categoria}
-          onChange={(e) => {
-            if (e.target.value === "add-category") {
-              setCategoryModalOpen(true);
-            } else {
-              setForm({ ...form, categoria: e.target.value });
-            }
-          }}
+          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
         >
           <option value="">Selecione uma Categoria</option>
           {categories.map((cat) => (
@@ -108,40 +190,18 @@ function Gastos() {
               {cat.type}
             </option>
           ))}
-          <option
-            value="add-category"
-            style={{ color: "blue", fontWeight: "bold" }}
-          >
-            + Adicionar Nova Categoria
-          </option>
         </select>
-
-        {/* Select de Banco */}
         <select
           value={form.banco}
-          onChange={(e) => {
-            if (e.target.value === "add-bank") {
-              setBankModalOpen(true);
-            } else {
-              setForm({ ...form, banco: e.target.value });
-            }
-          }}
+          onChange={(e) => setForm({ ...form, banco: e.target.value })}
         >
           <option value="">Selecione um Banco</option>
           {banks.map((bank) => (
-            <option key={bank.id} value={bank.nome}>
-              {bank.nome}
+            <option key={bank.id} value={bank.name}>
+              {bank.name}
             </option>
           ))}
-          <option
-            value="add-bank"
-            style={{ color: "blue", fontWeight: "bold" }}
-          >
-            + Adicionar Novo Banco
-          </option>
         </select>
-
-        {/* Outros Campos */}
         <input
           type="text"
           placeholder="Nome"
@@ -164,56 +224,27 @@ function Gastos() {
         </button>
       </div>
 
-      {/* Lista de Gastos */}
       <ul className="gastos-list">
         {exits.map((g, index) => (
           <li key={index} className="gasto-item">
-            {g.nome} - {g.categoria} - R$ {g.valor} - {g.data} ({g.banco})
+            {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} - {g.data}
             <div className="action-buttons">
-              <button className="edit-button" onClick={() => handleEditExpense(index)}>
-                <img src={Edit} alt="Editar"/>
+              <button
+                className="edit-button"
+                onClick={() => handleEditExpense(index)}
+              >
+                <img src={Edit} alt="Editar" />
               </button>
-              <button className="delete-button" onClick={() => handleDeleteExpense(index)}>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteExpense(index)}
+              >
                 <img src={Delete} alt="Deletar" />
               </button>
             </div>
           </li>
         ))}
       </ul>
-
-      {/* Modal de Categorias */}
-      {isCategoryModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Adicionar Nova Categoria</h3>
-            <input
-              type="text"
-              placeholder="Nova Categoria"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-            />
-            <button className="add-button" onClick={handleAddCategory}>Adicionar</button>
-            <button className="close-button" onClick={() => setCategoryModalOpen(false)}>Fechar</button>
-          </div>
-        </div>
-      )}
-
-      {/* Modal de Bancos */}
-      {isBankModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <h3>Adicionar Novo Banco</h3>
-            <input
-              type="text"
-              placeholder="Novo Banco"
-              value={newBank}
-              onChange={(e) => setNewBank(e.target.value)}
-            />
-            <button className="add-button" onClick={handleAddBank}>Adicionar</button>
-            <button className="close-button" onClick={() => setBankModalOpen(false)}>Fechar</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

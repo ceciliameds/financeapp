@@ -10,7 +10,6 @@ import {
   Legend,
 } from "chart.js";
 
-import Assinaturas from "../components/crud/Assinaturas";
 import Gastos from "../components/crud/Gastos";
 
 import "../styles/dashboard.css";
@@ -27,7 +26,6 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  const [subscriptions, setSubscriptions] = useState([]);
   const [exits, setExits] = useState([]);
   const [bankDetails, setBankDetails] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -46,20 +44,7 @@ const Dashboard = () => {
     });
 
     return {
-      labels: Object.keys(categoryExpenseMap),
-      datasets: [
-        {
-          label: "Gastos por Categoria",
-          data: Object.values(categoryExpenseMap),
-          backgroundColor: [
-            "#FF6384",
-            "#36A2EB",
-            "#FFCE56",
-            "#4BC0C0",
-            "#F7464A",
-          ],
-        },
-      ],
+      
     };
   };
 
@@ -100,24 +85,7 @@ const Dashboard = () => {
     <div className="dashboard">
       <h2 className="dashboard-title">Dashboard de Gastos</h2>
 
-      <div className="charts-wrapper">
-        <div className="chart-box">
-          <h3>Gastos por Categoria</h3>
-          <Bar data={categoryChartData} options={{ responsive: true }} />
-        </div>
-        <div className="chart-box">
-          <h3>Gastos por Banco</h3>
-          <Pie data={bankChartData} options={{ responsive: true }} />
-        </div>
-      </div>
-
       <div className="crud-wrapper">
-        <div className="crud-section">
-          <Assinaturas
-            subscriptions={subscriptions}
-            setSubscriptions={setSubscriptions}
-          />
-        </div>
         <div className="crud-section">
           <Gastos
             exits={exits}

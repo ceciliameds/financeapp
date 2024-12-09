@@ -1,3 +1,5 @@
+// Assinaturas
+
 import React, { useState } from "react";
 
 function Assinaturas() {
@@ -7,6 +9,10 @@ function Assinaturas() {
   const handleAdd = () => {
     setAssinaturas([...assinaturas, { ...form }]);
     setForm({ nome: "", valor: "", vencimento: "" });
+  };
+
+  const handleDelete = (indexToRemove) => {
+    setAssinaturas(assinaturas.filter((_, index) => index !== indexToRemove));
   };
 
   return (
@@ -30,11 +36,26 @@ function Assinaturas() {
         value={form.vencimento}
         onChange={(e) => setForm({ ...form, vencimento: e.target.value })}
       />
-      <button className="add-button" onClick={handleAdd}>Adicionar Assinatura</button>
+      <button className="add-button" onClick={handleAdd}>
+        Adicionar Assinatura
+      </button>
       <ul>
         {assinaturas.map((a, index) => (
           <li key={index}>
             {a.nome} - R$ {a.valor}/mês - Dia {a.vencimento}
+            <button
+              className="delete-button"
+              onClick={() => handleDelete(index)}
+              style={{
+                marginLeft: "10px",
+                background: "red",
+                color: "white",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Cancelei a assinatura
+            </button>
           </li>
         ))}
       </ul>
