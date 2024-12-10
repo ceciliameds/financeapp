@@ -6,11 +6,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import Delete from "../../assets/icons/delete.png";
-import Edit from "../../assets/icons/edit.png";
 import "../../styles/gastos.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
+
+const API_URL = "http://localhost:8000/api/expenses";
 
 function Gastos() {
   const [exits, setExits] = useState([]);
@@ -25,7 +25,6 @@ function Gastos() {
     { id: 8, type: "Assinaturas" },
     { id: 9, type: "Outros" },
   ]);
-
   const [banks, setBanks] = useState([
     { id: 1, name: "Nubank" },
     { id: 2, name: "Banco do Brasil" },
@@ -38,7 +37,6 @@ function Gastos() {
     { id: 9, name: "Next" },
     { id: 10, name: "Outros" },
   ]);
-
   const [form, setForm] = useState({
     categoria: "",
     nome: "",
@@ -46,125 +44,122 @@ function Gastos() {
     data: "",
     banco: "",
   });
-
   const [isEditing, setIsEditing] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
 
   const [categoryChartData, setCategoryChartData] = useState({});
   const [bankChartData, setBankChartData] = useState({});
 
-  const generateColors = (count) => {
-    const colors = [];
-    for (let i = 0; i < count; i++) {
-      const hue = (i * 360) / count;
-      colors.push(`hsl(${hue}, 70%, 60%)`);
-    }
-    return colors;
-  };
+  // Função para buscar o token atualizado do localStorage
+  const getToken = () => localStorage.getItem("access_token");
 
-  useEffect(() => {
-    const storedExits = JSON.parse(localStorage.getItem("exits")) || [];
-    setExits(storedExits);
-  }, []);
+  const fetchExits = async () => {
+    const token = getToken();
 
-  useEffect(() => {
-    const currentMonth = new Date().getMonth() + 1;
-    const currentYear = new Date().getFullYear();
-  
-    const monthlyExits = exits.filter((gasto) => {
-      const gastoDate = new Date(gasto.data);
-      return (
-        gastoDate.getMonth() + 1 === currentMonth &&
-        gastoDate.getFullYear() === currentYear
-      );
-    });
-  
-    const categoryTotals = {};
-    monthlyExits.forEach((gasto) => {
-      if (!categoryTotals[gasto.categoria]) {
-        categoryTotals[gasto.categoria] = 0;
-      }
-      categoryTotals[gasto.categoria] += parseFloat(gasto.valor || 0);
-    });
-  
-    const bankTotals = {};
-    monthlyExits.forEach((gasto) => {
-      if (!bankTotals[gasto.banco]) {
-        bankTotals[gasto.banco] = 0;
-      }
-      bankTotals[gasto.banco] += parseFloat(gasto.valor || 0);
-    });
-
-    const categoryColors = generateColors(Object.keys(categoryTotals).length);
-    const bankColors = generateColors(Object.keys(bankTotals).length);
-  
-    setCategoryChartData({
-      labels: Object.keys(categoryTotals),
-      datasets: [
-        {
-          label: "Gastos por Categoria Mensal",
-          data: Object.values(categoryTotals),
-          backgroundColor: categoryColors,
-          borderColor: "#ffffff",
-          borderWidth: 1,
-        },
-      ],
-    });
-  
-    setBankChartData({
-      labels: Object.keys(bankTotals),
-      datasets: [
-        {
-          label: "Gastos por Banco Mensal",
-          data: Object.values(bankTotals),
-          backgroundColor: bankColors,
-          borderColor: "#ffffff",
-          borderWidth: 1,
-        },
-      ],
-    });
-  }, [exits]);
-
-  const handleAddExpense = () => {
-    if (!form.categoria || !form.nome || !form.valor || !form.data || !form.banco) {
-      alert("Por favor, preencha todos os campos!");
+    if (!token) {
+      alert("Token não encontrado. Por favor, faça login.");
       return;
     }
 
-    let updatedExits = [];
-    if (isEditing) {
-      updatedExits = [...exits];
-      updatedExits[editIndex] = form;
-      setIsEditing(false);
-      setEditIndex(null);
-    } else {
-      updatedExits = [...exits, { ...form }];
+    try {
+      const response = await fetch(API_URL, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setExits(data);
+      } else {
+        alert("Erro ao carregar os gastos.");
+      }
+    } catch (error) {
+      alert("Erro ao carregar os gastos.");
+    }
+  };
+
+  const handleAddExpense = async () => {
+    const token = getToken();
+
+    if (!token) {
+      alert("Token não encontrado. Por favor, faça login.");
+      return;
     }
 
-    setExits(updatedExits);
-    setForm({ categoria: "", nome: "", valor: "", data: "", banco: "" });
+    const expenseData = {
+      categoria: form.categoria,
+      nome: form.nome,
+      valor: parseFloat(form.valor),
+      data: form.data,
+      banco: form.banco,
+    };
 
-    localStorage.setItem("exits", JSON.stringify(updatedExits));
+    try {
+      const response = await fetch(API_URL, {
+        method: isEditing ? "PUT" : "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(expenseData),
+      });
+
+      if (response.ok) {
+        fetchExits(); // Atualiza a lista de gastos
+        setForm({
+          categoria: "",
+          nome: "",
+          valor: "",
+          data: "",
+          banco: "",
+        });
+        setIsEditing(false);
+        setEditIndex(null);
+      } else {
+        alert("Erro ao salvar o gasto.");
+      }
+    } catch (error) {
+      alert("Erro ao salvar o gasto.");
+    }
   };
 
-  const handleDeleteExpense = (index) => {
-    const updatedExits = exits.filter((_, i) => i !== index);
-    setExits(updatedExits);
+  const handleDeleteExpense = async (index) => {
+    const token = getToken();
 
-    localStorage.setItem("exits", JSON.stringify(updatedExits));
+    if (!token) {
+      alert("Token não encontrado. Por favor, faça login.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/${index}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        fetchExits(); // Atualiza a lista de gastos
+      } else {
+        alert("Erro ao excluir o gasto.");
+      }
+    } catch (error) {
+      alert("Erro ao excluir o gasto.");
+    }
   };
 
-  const handleEditExpense = (index) => {
-    setForm(exits[index]);
-    setIsEditing(true);
-    setEditIndex(index);
-  };
+  useEffect(() => {
+    fetchExits();
+  }, []);
 
   return (
     <div className="gastos">
       <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
         <div style={{ width: "35%" }}>
-          <h3 style={{textAlign: "center"}}>Gastos por Categoria mensal</h3>
+          <h3 style={{ textAlign: "center" }}>Gastos por Categoria Mensal</h3>
           {categoryChartData.labels ? (
             <Pie data={categoryChartData} />
           ) : (
@@ -172,7 +167,7 @@ function Gastos() {
           )}
         </div>
         <div style={{ width: "35%" }}>
-          <h3 style={{textAlign: "center"}}>Gastos por Banco mensal</h3>
+          <h3 style={{ textAlign: "center" }}>Gastos por Banco Mensal</h3>
           {bankChartData.labels ? (
             <Pie data={bankChartData} />
           ) : (
@@ -233,17 +228,11 @@ function Gastos() {
             {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} -{" "}
             {new Date(g.data).toLocaleDateString("pt-BR")}
             <div className="action-buttons">
-              <button
-                className="edit-button"
-                onClick={() => handleEditExpense(index)}
-              >
-                <img src={Edit} alt="Editar" />
+              <button className="edit-button" onClick={() => handleEditExpense(index)}>
+                Editar
               </button>
-              <button
-                className="delete-button"
-                onClick={() => handleDeleteExpense(index)}
-              >
-                <img src={Delete} alt="Deletar" />
+              <button className="delete-button" onClick={() => handleDeleteExpense(index)}>
+                Deletar
               </button>
             </div>
           </li>

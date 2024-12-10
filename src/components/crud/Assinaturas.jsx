@@ -1,24 +1,63 @@
 import React, { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import "../../styles/gastos.css";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const API_URL = "http://localhost:8000/api/finance/subscriptions";
 
-function Assinaturas() {
-  const [assinaturas, setAssinaturas] = useState([]);
-  const [form, setForm] = useState({ nome_assinatura: "", valor: "", vencimento: "" });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+function Gastos() {
+  const [exits, setExits] = useState([]);
+  const [categories, setCategories] = useState([
+    { id: 1, type: "Alimentação" },
+    { id: 2, type: "Saúde" },
+    { id: 3, type: "Lazer" },
+    { id: 4, type: "Estudo" },
+    { id: 5, type: "Transporte" },
+    { id: 6, type: "Viagens" },
+    { id: 7, type: "Moradia" },
+    { id: 8, type: "Assinaturas" },
+    { id: 9, type: "Outros" },
+  ]);
+  const [banks, setBanks] = useState([
+    { id: 1, name: "Nubank" },
+    { id: 2, name: "Banco do Brasil" },
+    { id: 3, name: "Itaú" },
+    { id: 4, name: "Santander" },
+    { id: 5, name: "Bradesco" },
+    { id: 6, name: "Caixa" },
+    { id: 7, name: "Inter" },
+    { id: 8, name: "Original" },
+    { id: 9, name: "Next" },
+    { id: 10, name: "Outros" },
+  ]);
+  const [form, setForm] = useState({
+    categoria: "",
+    nome: "",
+    valor: "",
+    data: "",
+    banco: "",
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+
+  const [categoryChartData, setCategoryChartData] = useState({});
+  const [bankChartData, setBankChartData] = useState({});
 
   // Função para buscar o token atualizado do localStorage
   const getToken = () => localStorage.getItem("access_token");
 
-  // Carregar assinaturas
-  const fetchAssinaturas = async () => {
-    setLoading(true);
+  const fetchExits = async () => {
     const token = getToken();
 
     if (!token) {
-      setError("Token não encontrado. Por favor, faça login novamente.");
-      setLoading(false);
+      alert("Token não encontrado. Por favor, faça login.");
       return;
     }
 
@@ -27,78 +66,75 @@ function Assinaturas() {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
         const data = await response.json();
-        setAssinaturas(data);
+        setExits(data);
       } else {
-        setError("Erro ao carregar assinaturas.");
+        alert("Erro ao carregar os gastos.");
       }
     } catch (error) {
-      setError("Erro ao buscar assinaturas.");
-    } finally {
-      setLoading(false);
+      alert("Erro ao carregar os gastos.");
     }
   };
 
-  // Adicionar assinatura
-  const handleAdd = async () => {
-    setLoading(true);
+  const handleAddExpense = async () => {
     const token = getToken();
 
     if (!token) {
-      setError("Token não encontrado. Por favor, faça login novamente.");
-      setLoading(false);
+      alert("Token não encontrado. Por favor, faça login.");
       return;
     }
 
+    const expenseData = {
+      categoria: form.categoria,
+      nome: form.nome,
+      valor: parseFloat(form.valor),
+      data: form.data,
+      banco: form.banco,
+    };
+
     try {
       const response = await fetch(API_URL, {
-        method: "POST",
+        method: isEditing ? "PUT" : "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          nome_assinatura: form.nome_assinatura,
-          valor: parseFloat(form.valor),
-          vencimento: form.vencimento,
-          banco_id: 1, // Ajuste conforme a sua lógica de bancos
-          categoria_id: 6, // Ajuste conforme a sua lógica de categorias
-        }),
+        body: JSON.stringify(expenseData),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        fetchAssinaturas(); // Recarrega a lista
-        setForm({ nome_assinatura: "", valor: "", vencimento: "" });
+        fetchExits(); // Atualiza a lista de gastos
+        setForm({
+          categoria: "",
+          nome: "",
+          valor: "",
+          data: "",
+          banco: "",
+        });
+        setIsEditing(false);
+        setEditIndex(null);
       } else {
-        setError(data.message || "Erro ao adicionar assinatura.");
+        alert("Erro ao salvar o gasto.");
       }
     } catch (error) {
-      setError("Erro ao adicionar assinatura.");
-    } finally {
-      setLoading(false);
+      alert("Erro ao salvar o gasto.");
     }
   };
 
-  // Deletar assinatura
-  const handleDelete = async (id) => {
-    setLoading(true);
+  const handleDeleteExpense = async (index) => {
     const token = getToken();
 
     if (!token) {
-      setError("Token não encontrado. Por favor, faça login novamente.");
-      setLoading(false);
+      alert("Token não encontrado. Por favor, faça login.");
       return;
     }
 
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
+      const response = await fetch(`${API_URL}/${index}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -106,34 +142,69 @@ function Assinaturas() {
       });
 
       if (response.ok) {
-        fetchAssinaturas(); // Recarrega a lista
+        fetchExits(); // Atualiza a lista de gastos
       } else {
-        setError("Erro ao excluir assinatura.");
+        alert("Erro ao excluir o gasto.");
       }
     } catch (error) {
-      setError("Erro ao excluir assinatura.");
-    } finally {
-      setLoading(false);
+      alert("Erro ao excluir o gasto.");
     }
   };
 
-  // Carregar assinaturas ao montar o componente
   useEffect(() => {
-    fetchAssinaturas();
+    fetchExits();
   }, []);
 
   return (
-    <div>
-      <h2>Assinaturas</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading && <p>Carregando...</p>}
+    <div className="gastos">
+      <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
+        <div style={{ width: "35%" }}>
+          <h3 style={{ textAlign: "center" }}>Gastos por Categoria Mensal</h3>
+          {categoryChartData.labels ? (
+            <Pie data={categoryChartData} />
+          ) : (
+            <p>Nenhum dado disponível</p>
+          )}
+        </div>
+        <div style={{ width: "35%" }}>
+          <h3 style={{ textAlign: "center" }}>Gastos por Banco Mensal</h3>
+          {bankChartData.labels ? (
+            <Pie data={bankChartData} />
+          ) : (
+            <p>Nenhum dado disponível</p>
+          )}
+        </div>
+      </div>
 
-      <div>
+      <h2>Adicionar Gasto</h2>
+      <div className="form-group">
+        <select
+          value={form.categoria}
+          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+        >
+          <option value="">Selecione uma Categoria</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.type}>
+              {cat.type}
+            </option>
+          ))}
+        </select>
+        <select
+          value={form.banco}
+          onChange={(e) => setForm({ ...form, banco: e.target.value })}
+        >
+          <option value="">Selecione um Banco</option>
+          {banks.map((bank) => (
+            <option key={bank.id} value={bank.name}>
+              {bank.name}
+            </option>
+          ))}
+        </select>
         <input
           type="text"
           placeholder="Nome"
-          value={form.nome_assinatura}
-          onChange={(e) => setForm({ ...form, nome_assinatura: e.target.value })}
+          value={form.nome}
+          onChange={(e) => setForm({ ...form, nome: e.target.value })}
         />
         <input
           type="number"
@@ -143,31 +214,32 @@ function Assinaturas() {
         />
         <input
           type="date"
-          placeholder="Vencimento"
-          value={form.vencimento}
-          onChange={(e) => setForm({ ...form, vencimento: e.target.value })}
+          value={form.data}
+          onChange={(e) => setForm({ ...form, data: e.target.value })}
         />
-        <button onClick={handleAdd} disabled={loading}>
-          {loading ? "Adicionando..." : "Adicionar Assinatura"}
+        <button className="add-button" onClick={handleAddExpense}>
+          {isEditing ? "Salvar Alterações" : "Adicionar Gasto"}
         </button>
       </div>
 
-      <ul>
-        {assinaturas.length > 0 ? (
-          assinaturas.map((a) => (
-            <li key={a.id}>
-              {a.nome_assinatura} - R$ {a.valor}/mês - Vencimento: {a.vencimento}
-              <button onClick={() => handleDelete(a.id)} disabled={loading}>
-                {loading ? "Cancelando..." : "Cancelar"}
+      <ul className="gastos-list">
+        {exits.map((g, index) => (
+          <li key={index} className="gasto-item">
+            {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} -{" "}
+            {new Date(g.data).toLocaleDateString("pt-BR")}
+            <div className="action-buttons">
+              <button className="edit-button" onClick={() => handleEditExpense(index)}>
+                Editar
               </button>
-            </li>
-          ))
-        ) : (
-          <p>Nenhuma assinatura encontrada.</p>
-        )}
+              <button className="delete-button" onClick={() => handleDeleteExpense(index)}>
+                Deletar
+              </button>
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );
 }
 
-export default Assinaturas;
+export default Gastos;
