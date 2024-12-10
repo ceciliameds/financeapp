@@ -37,6 +37,7 @@ Este projeto é licenciado sob a Licença MIT com a seguinte condição adiciona
 A Licença MIT permite que você use, modifique, copie e distribua o código deste projeto, desde que o aviso de direitos autorais e a permissão da licença sejam incluídos nas cópias ou partes substanciais do código. A licença é fornecida "como está", sem garantias de qualquer tipo.
 
 <br>
+
 ### 📬 Contato
 
 Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
