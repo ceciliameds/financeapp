@@ -31,7 +31,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina local.
 
 Este projeto é licenciado sob a Licença MIT com a seguinte condição adicional:
 
-- O uso, modificação ou distribuição do código deve manter o devido crédito ao autor original.
+- O uso, modificação ou distribuição do código deve manter o devido crédito aos autores originais.
 
 ### Licença MIT
 
