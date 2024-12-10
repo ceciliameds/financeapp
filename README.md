@@ -6,7 +6,7 @@ O sistema oferece funcionalidades para adicionar, editar e excluir registros de 
 
 Além disso, o projeto gera gráficos dinâmicos e interativos que ajudam o usuário a entender melhor sua situação financeira, visualizando a distribuição dos gastos tanto por categoria quanto por banco.
 
-## Tecnologias utilizadas
+## 💻 Tecnologias utilizadas
 
 O projeto foi desenvolvido utilizando as seguintes tecnologias:
 
@@ -15,7 +15,7 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - **PHP**
 
 
-## Como rodar o projeto
+## 🚀 Como rodar o projeto
 
 Siga os passos abaixo para rodar o projeto em sua máquina local.
 
@@ -25,7 +25,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina local.
 
 
 
-## Licença
+## 📜 Licença
 
 Este projeto é licenciado sob a Licença MIT com a seguinte condição adicional:
 
@@ -36,18 +36,17 @@ Este projeto é licenciado sob a Licença MIT com a seguinte condição adiciona
 A Licença MIT permite que você use, modifique, copie e distribua o código deste projeto, desde que o aviso de direitos autorais e a permissão da licença sejam incluídos nas cópias ou partes substanciais do código. A licença é fornecida "como está", sem garantias de qualquer tipo.
 
 
-### Contato
+### 📬 Contato
 
-Se você tiver dúvidas ou sugestões, pode entrar em contato com os desenvolvedores:
+Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
 
-- Juan Pablo
-- Email: jphferreira@outlook.com
+Juan Pablo
+📧 jphferreira@outlook.com
 
-- Maria Cecília
-- Email:
+Maria Cecília
+📧 [Insira aqui o email da Maria Cecília]
 
-- Marcelo Melo
-- Email: 
-
+Marcelo Melo
+📧 [Insira aqui o email do Marcelo Melo]
 
 
