@@ -51,12 +51,12 @@ composer install
 
 Configure o arquivo .env com as credenciais do seu banco de dados (MySQL). No arquivo .env, ajuste os seguintes parâmetros:
 
--**DB_CONNECTION=mysql**
--**DB_HOST=127.0.0.1**
--**DB_PORT=3306**
--**DB_DATABASE=financeapp**
--**DB_USERNAME=<SEU_USUARIO>**
--**DB_PASSWORD=<SUA_SENHA>**
+- **DB_CONNECTION=mysql**
+- **DB_HOST=127.0.0.1**
+- **DB_PORT=3306**
+- **DB_DATABASE=financeapp**
+- **DB_USERNAME=<SEU_USUARIO>**
+- **DB_PASSWORD=<SUA_SENHA>**
 
 Rode as migrações para configurar a estrutura do banco de dados:
 
