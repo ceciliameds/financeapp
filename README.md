@@ -50,7 +50,7 @@ Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar
 📧 marcelomelo.tech@gmail.com
 
 <li><b> Maria Cecília </b> </li>
-📧 
+📧 ceciliamedeirs@gmail.com
 
 
 </ul>
