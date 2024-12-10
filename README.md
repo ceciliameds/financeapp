@@ -33,18 +33,21 @@ Este projeto é licenciado sob a Licença MIT com a seguinte condição adiciona
 
 ### Licença MIT
 
-A Licença MIT permite que qualquer pessoa utilize, modifique, copie e distribua o código deste projeto, desde que a seguinte condição seja atendida:
+A Licença MIT permite que você use, modifique, copie e distribua o código deste projeto, desde que o aviso de direitos autorais e a permissão da licença sejam incluídos nas cópias ou partes substanciais do código. A licença é fornecida "como está", sem garantias de qualquer tipo.
 
-- O código ou o material deve incluir o aviso de direitos autorais e a permissão da licença, bem como o aviso de atribuição ao autor original.
 
-Abaixo está o texto da Licença MIT:
+### Contato
 
-MIT License
+Se você tiver dúvidas ou sugestões, pode entrar em contato com os desenvolvedores:
 
-Copyright (c) [ano] [nome do autor]
+- Juan Pablo
+- Email: jphferreira@outlook.com
 
-Permissão é concedida, gratuitamente, a qualquer pessoa que obtenha uma cópia deste software e dos arquivos de documentação associados (o "Software"), para lidar no Software sem restrição, incluindo, sem limitação, os direitos de usar, copiar, modificar, mesclar, publicar, distribuir, sublicenciar e/ou vender cópias do Software, e para permitir que as pessoas a quem o Software é fornecido o façam, desde que a seguinte condição seja atendida:
+- Maria Cecília
+- Email:
 
-O aviso de copyright acima e este aviso de permissão devem ser incluídos em todas as cópias ou partes substanciais do Software.
+- Marcelo Melo
+- Email: 
 
-O Software é fornecido "NO ESTADO EM QUE SE ENCONTRA", SEM GARANTIAS OU CONDIÇÕES DE QUALQUER TIPO, expressas ou implícitas, incluindo, mas não se limitando a, garantias de comercialização, adequação a um fim específico e não violação. Em nenhum caso os autores ou detentores de direitos autorais serão responsáveis por qualquer reclamação, dano ou outra responsabilidade, seja em uma ação de contrato, ato ilícito ou outro, decorrente de, ou de alguma forma relacionado com, o software ou o uso ou outros negócios no software.
+
+
