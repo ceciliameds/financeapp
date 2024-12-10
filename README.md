@@ -13,8 +13,6 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - **Backend: PHP, MySQL**
 - **Banco de Dados: MySQL**
 
-<br>
-
 ## 🚀 Como rodar o projeto
 
 Siga os passos abaixo para rodar o projeto em sua máquina local.
@@ -22,8 +20,6 @@ Siga os passos abaixo para rodar o projeto em sua máquina local.
 #### 1. Clonar o repositório.
 #### 2. Instalar as dependências do projeto.
 #### 3. Usar o "npm run dev" ou "yarn dev" para rodar o projeto.
-
-<br>
 
 ### Configurar o Backend (PHP e MySQL)
 
@@ -39,7 +35,7 @@ sudo apt install php-curl
 sudo apt install php-pdo
 sudo apt install php-xml
 
-### 6. Rodar o Backend
+#### 6. Rodar o Backend
 Navegue até o diretório do backend:
 
 cd backend
@@ -67,19 +63,26 @@ php artisan migrate
 php artisan db:seed
 
 Agora, o seu backend estará pronto para ser utilizado, e o banco de dados estará configurado com os dados iniciais.
+## 📜 Licença
 
-📜 Licença
 Este projeto é licenciado sob a Licença MIT com a seguinte condição adicional:
-O uso, modificação ou distribuição do código deve manter o devido crédito aos autores originais.
-Licença MIT
+
+- O uso, modificação ou distribuição do código deve manter o devido crédito aos autores originais.
+
+### Licença MIT
+
 A Licença MIT permite que você use, modifique, copie e distribua o código deste projeto, desde que o aviso de direitos autorais e a permissão da licença sejam incluídos nas cópias ou partes substanciais do código. A licença é fornecida "como está", sem garantias de qualquer tipo.
 
-📬 Contato
-Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
-Juan Pablo
-📧 jphferreira@outlook.com
-Marcelo Melo
-📧 marcelomelo.tech@gmail.com
-Maria Cecília
-📧 ceciliamedeirs@gmail.com
+## 📬 Contato
 
+Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
+<ul>
+<li> <b> Juan Pablo </b> <br></li>
+📧 jphferreira@outlook.com
+
+<li><b> Marcelo Melo </b> </li>
+📧 marcelomelo.tech@gmail.com
+
+<li><b> Maria Cecília </b> </li>
+📧 ceciliamedeirs@gmail.com
+</ul>
