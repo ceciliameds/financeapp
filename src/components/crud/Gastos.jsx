@@ -14,7 +14,6 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 function Gastos() {
   const [exits, setExits] = useState([]);
-  const [assinaturas, setAssinaturas] = useState([]);
   const [categories, setCategories] = useState([
     { id: 1, type: "Alimentação" },
     { id: 2, type: "Saúde" },
@@ -54,7 +53,6 @@ function Gastos() {
   const [categoryChartData, setCategoryChartData] = useState({});
   const [bankChartData, setBankChartData] = useState({});
 
-  // Geração de cores únicas
   const generateColors = (count) => {
     const colors = [];
     for (let i = 0; i < count; i++) {
@@ -65,10 +63,14 @@ function Gastos() {
   };
 
   useEffect(() => {
+    const storedExits = JSON.parse(localStorage.getItem("exits")) || [];
+    setExits(storedExits);
+  }, []);
+
+  useEffect(() => {
     const currentMonth = new Date().getMonth() + 1;
     const currentYear = new Date().getFullYear();
   
-    // Filtrar gastos do mês atual
     const monthlyExits = exits.filter((gasto) => {
       const gastoDate = new Date(gasto.data);
       return (
@@ -77,7 +79,6 @@ function Gastos() {
       );
     });
   
-    // Totais por categoria
     const categoryTotals = {};
     monthlyExits.forEach((gasto) => {
       if (!categoryTotals[gasto.categoria]) {
@@ -86,7 +87,6 @@ function Gastos() {
       categoryTotals[gasto.categoria] += parseFloat(gasto.valor || 0);
     });
   
-    // Totais por banco
     const bankTotals = {};
     monthlyExits.forEach((gasto) => {
       if (!bankTotals[gasto.banco]) {
@@ -94,17 +94,15 @@ function Gastos() {
       }
       bankTotals[gasto.banco] += parseFloat(gasto.valor || 0);
     });
-  
-    // Gerar cores
+
     const categoryColors = generateColors(Object.keys(categoryTotals).length);
     const bankColors = generateColors(Object.keys(bankTotals).length);
   
-    // Atualizar dados do gráfico
     setCategoryChartData({
       labels: Object.keys(categoryTotals),
       datasets: [
         {
-          label: "Gastos por Categoria",
+          label: "Gastos por Categoria Mensal",
           data: Object.values(categoryTotals),
           backgroundColor: categoryColors,
           borderColor: "#ffffff",
@@ -117,7 +115,7 @@ function Gastos() {
       labels: Object.keys(bankTotals),
       datasets: [
         {
-          label: "Gastos por Banco",
+          label: "Gastos por Banco Mensal",
           data: Object.values(bankTotals),
           backgroundColor: bankColors,
           borderColor: "#ffffff",
@@ -125,7 +123,7 @@ function Gastos() {
         },
       ],
     });
-  }, [exits, categories, banks]);
+  }, [exits]);
 
   const handleAddExpense = () => {
     if (!form.categoria || !form.nome || !form.valor || !form.data || !form.banco) {
@@ -133,22 +131,27 @@ function Gastos() {
       return;
     }
 
+    let updatedExits = [];
     if (isEditing) {
-      const updatedExits = [...exits];
+      updatedExits = [...exits];
       updatedExits[editIndex] = form;
-      setExits(updatedExits);
       setIsEditing(false);
       setEditIndex(null);
     } else {
-      setExits([...exits, { ...form }]);
+      updatedExits = [...exits, { ...form }];
     }
 
+    setExits(updatedExits);
     setForm({ categoria: "", nome: "", valor: "", data: "", banco: "" });
+
+    localStorage.setItem("exits", JSON.stringify(updatedExits));
   };
 
   const handleDeleteExpense = (index) => {
     const updatedExits = exits.filter((_, i) => i !== index);
     setExits(updatedExits);
+
+    localStorage.setItem("exits", JSON.stringify(updatedExits));
   };
 
   const handleEditExpense = (index) => {
@@ -160,16 +163,16 @@ function Gastos() {
   return (
     <div className="gastos">
       <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
-        <div style={{ width: "45%" }}>
-          <h3>Gastos por Categoria</h3>
+        <div style={{ width: "35%" }}>
+          <h3>Gastos por Categoria mensal</h3>
           {categoryChartData.labels ? (
             <Pie data={categoryChartData} />
           ) : (
             <p>Nenhum dado disponível</p>
           )}
         </div>
-        <div style={{ width: "45%" }}>
-          <h3>Gastos por Banco</h3>
+        <div style={{ width: "35%" }}>
+          <h3>Gastos por Banco mensal</h3>
           {bankChartData.labels ? (
             <Pie data={bankChartData} />
           ) : (
