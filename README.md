@@ -43,11 +43,12 @@ Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar
 <li> <b> Juan Pablo </b> <br></li>
 📧 jphferreira@outlook.com
 
-<li><b> Maria Cecília </b> </li>
-📧 [Insira aqui o email da Maria Cecília]
-
 <li><b> Marcelo Melo </b> </li>
-📧 [marcelomelo.tech@gmail.com](mailto:marcelomelo.tech@gmail.com)
+📧 marcelomelo.tech@gmail.com
+
+<li><b> Maria Cecília </b> </li>
+📧 
+
 
 </ul>
 
