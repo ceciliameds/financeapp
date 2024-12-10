@@ -1,4 +1,12 @@
-# React + Vite
+#
+
+## Tecnologias utilizadas
+<ul>
+  <li> React </li>
+  <li> PHP </li>
+</ul>
+
+
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
