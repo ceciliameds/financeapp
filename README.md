@@ -14,7 +14,7 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - **Vite**
 - **PHP**
 
-
+<br>
 ## 🚀 Como rodar o projeto
 
 Siga os passos abaixo para rodar o projeto em sua máquina local.
@@ -22,6 +22,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina local.
 ### 1. Clonar o repositório.
 ### 2. Instalar as dependências do projeto.
 ### 3. Usar o "npm run dev" ou "yarn dev" para rodar o projeto.
+<br>
 
 
 
@@ -35,7 +36,7 @@ Este projeto é licenciado sob a Licença MIT com a seguinte condição adiciona
 
 A Licença MIT permite que você use, modifique, copie e distribua o código deste projeto, desde que o aviso de direitos autorais e a permissão da licença sejam incluídos nas cópias ou partes substanciais do código. A licença é fornecida "como está", sem garantias de qualquer tipo.
 
-
+<br>
 ### 📬 Contato
 
 Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
