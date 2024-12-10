@@ -15,13 +15,14 @@ O projeto foi desenvolvido utilizando as seguintes tecnologias:
 - **PHP**
 
 <br>
+
 ## 🚀 Como rodar o projeto
 
 Siga os passos abaixo para rodar o projeto em sua máquina local.
 
-### 1. Clonar o repositório.
-### 2. Instalar as dependências do projeto.
-### 3. Usar o "npm run dev" ou "yarn dev" para rodar o projeto.
+#### 1. Clonar o repositório.
+#### 2. Instalar as dependências do projeto.
+#### 3. Usar o "npm run dev" ou "yarn dev" para rodar o projeto.
 <br>
 
 
