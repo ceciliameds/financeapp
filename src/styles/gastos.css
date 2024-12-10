@@ -23,3 +23,10 @@
   border-radius: 50%;
   margin-right: 8px;
 }
+
+.gasto-item{
+  text-transform: capitalize;
+  border: none;
+}
+
+

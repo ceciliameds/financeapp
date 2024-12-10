@@ -15,6 +15,7 @@ import Gastos from "../components/crud/Gastos";
 import "../styles/dashboard.css";
 import "../styles/charts.css";
 import "../styles/crud.css";
+import Footer from "../components/Footer";
 
 ChartJS.register(
   CategoryScale,
@@ -93,6 +94,7 @@ const Dashboard = () => {
             categories={categories}
             bankDetails={bankDetails}
           />
+          <Footer />
         </div>
       </div>
     </div>

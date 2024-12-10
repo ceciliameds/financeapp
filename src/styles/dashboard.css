@@ -12,6 +12,10 @@
   overflow: hidden; 
 }
 
+html, body {
+  background-color: #E5F5FF;
+}
+
 .hero-main {
   display: flex;
   justify-content: space-between;
@@ -87,6 +91,10 @@
 
 .desc-list p strong {
   color: var(--cor-fonte-clara);
+}
+
+.dashboard-title{
+  text-align: center;
 }
 
 @media (max-width: 800px) {

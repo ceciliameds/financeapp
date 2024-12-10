@@ -164,7 +164,7 @@ function Gastos() {
     <div className="gastos">
       <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
         <div style={{ width: "35%" }}>
-          <h3>Gastos por Categoria mensal</h3>
+          <h3 style={{textAlign: "center"}}>Gastos por Categoria mensal</h3>
           {categoryChartData.labels ? (
             <Pie data={categoryChartData} />
           ) : (
@@ -172,7 +172,7 @@ function Gastos() {
           )}
         </div>
         <div style={{ width: "35%" }}>
-          <h3>Gastos por Banco mensal</h3>
+          <h3 style={{textAlign: "center"}}>Gastos por Banco mensal</h3>
           {bankChartData.labels ? (
             <Pie data={bankChartData} />
           ) : (
@@ -230,7 +230,8 @@ function Gastos() {
       <ul className="gastos-list">
         {exits.map((g, index) => (
           <li key={index} className="gasto-item">
-            {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} - {g.data}
+            {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} -{" "}
+            {new Date(g.data).toLocaleDateString("pt-BR")}
             <div className="action-buttons">
               <button
                 className="edit-button"
