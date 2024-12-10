@@ -4,7 +4,7 @@ import axios from "axios"; // Para realizar a requisição HTTP
 import "../styles/register.css"; // Importando o CSS de registro
 
 function Register() {
-  const [login, setLogin] = useState(""); //
+  const [login, setLogin] = useState(""); // E-mail
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -15,6 +15,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Verificar se as senhas coincidem
     if (password !== confirmPassword) {
       setErrorMessage("As senhas não coincidem.");
       return;
@@ -32,11 +33,14 @@ function Register() {
 
       if (response.data.message) {
         alert("Usuário registrado com sucesso!");
-        navigate("/login"); 
+        navigate("/login"); // Redirecionar para o login após o sucesso
       }
     } catch (error) {
+      // Tratar erros do servidor ou de validação
       if (error.response) {
-        setErrorMessage(error.response.data.message || "Erro ao registrar usuário.");
+        const errorData = error.response.data;
+        // Mostrar erros detalhados do servidor, se existirem
+        setErrorMessage(errorData.message || errorData.errors?.join(' ') || "Erro ao registrar usuário.");
       } else {
         setErrorMessage("Erro de conexão. Tente novamente.");
       }
@@ -54,6 +58,7 @@ function Register() {
               placeholder="Primeiro Nome"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              required
             />
           </div>
           <div className="input-group">
@@ -62,15 +67,16 @@ function Register() {
               placeholder="Segundo Nome"
               value={secondName}
               onChange={(e) => setSecondName(e.target.value)}
+              required
             />
           </div>
           <div className="input-group">
             <input
-              type="email"  
+              type="email"
               placeholder="E-mail"
               value={login}
-              onChange={(e) => setLogin(e.target.value)} 
-              required  
+              onChange={(e) => setLogin(e.target.value)}
+              required
             />
           </div>
           <div className="input-group">
@@ -79,7 +85,7 @@ function Register() {
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required  // Tornar campo obrigatório
+              required
             />
           </div>
           <div className="input-group">
@@ -88,7 +94,7 @@ function Register() {
               placeholder="Confirmar Senha"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              required  // Tornar campo obrigatório
+              required
             />
           </div>
 

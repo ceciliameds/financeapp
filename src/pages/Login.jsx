@@ -4,19 +4,40 @@ import "../styles/login.css";
 import User from "../assets/icons/user.png";
 import Lock from "../assets/icons/lock.png";
 import Email from "../assets/icons/email.png";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import axios from "axios"; // Importando axios para requisições HTTP
 
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // Estado para mostrar mensagens de erro
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  // Função para tratar o login
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (username === "user" && password === "password") {
-      navigate("/dashboard");
-    } else {
-      alert("Login inválido");
+
+    try {
+      // Enviar a requisição de login para a API
+      const response = await axios.post("http://localhost:8000/api/login", {
+        login: username,
+        senha: password,
+      });
+
+      // Se o login for bem-sucedido, armazenamos o token no localStorage
+      if (response.data.access_token) {
+        // Armazenar o token no localStorage
+        localStorage.setItem("token", response.data.access_token);
+        // Redireciona para o dashboard ou qualquer página interna
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      // Se houver erro, mostramos a mensagem de erro
+      if (error.response) {
+        setErrorMessage(error.response.data.message || "Credenciais inválidas.");
+      } else {
+        setErrorMessage("Erro de conexão. Tente novamente.");
+      }
     }
   };
 
@@ -35,6 +56,7 @@ function Login() {
               placeholder="Email"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
+              required // Torna o campo obrigatório
             />
           </div>
           <div className="input-group">
@@ -44,8 +66,12 @@ function Login() {
               placeholder="Senha"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required // Torna o campo obrigatório
             />
           </div>
+
+          {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Exibe erro, se houver */}
+
           <button type="submit" className="submit">
             Entrar
           </button>
