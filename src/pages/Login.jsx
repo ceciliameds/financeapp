@@ -5,7 +5,7 @@ import User from "../assets/icons/user.png";
 import Lock from "../assets/icons/lock.png";
 import Email from "../assets/icons/email.png";
 import { Link } from "react-router-dom";
-import axios from "axios"; 
+import axios from "axios";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -13,23 +13,35 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState(""); 
   const navigate = useNavigate();
 
+  // Função chamada ao submeter o formulário de login
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Enviando a requisição de login para a API
       const response = await axios.post("http://localhost:8000/api/login", {
         login: username,
         senha: password,
       });
 
+      // Verificando se a resposta contém o access_token
       if (response.data.access_token) {
+        // Armazenando o token no localStorage
         localStorage.setItem("access_token", response.data.access_token);
-        navigate("/dashboard"); 
+        
+        // Verificando se o token foi armazenado corretamente
+        console.log("Token armazenado:", response.data.access_token); 
+
+        // Redirecionando o usuário para o Dashboard
+        navigate("/visualizacao"); 
       }
     } catch (error) {
+      // Tratando erros da API e outros erros
       if (error.response) {
+        // Se a resposta da API contiver erro, exibe a mensagem do servidor
         setErrorMessage(error.response.data.message || "Credenciais inválidas.");
       } else {
+        // Caso haja erro de conexão
         setErrorMessage("Erro de conexão. Tente novamente.");
       }
     }
@@ -64,6 +76,7 @@ function Login() {
             />
           </div>
 
+          {/* Exibindo mensagens de erro */}
           {errorMessage && <p className="error-message">{errorMessage}</p>} 
 
           <button type="submit" className="submit">

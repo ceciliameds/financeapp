@@ -1,26 +1,43 @@
 @import url("https://fonts.googleapis.com/css2?family=Righteous&family=Sarala:wght@400;700&display=swap");
 
+/* Estilo global */
+:root {
+  --cor-fundo-claro: #f5f5fa;
+  --cor-fundo-escuro: #333;
+  --cor-principal: #3b82f6;
+  --cor-marca-claro: #64b5f6;
+  --cor-fonte-clara: #fff;
+  --cor-fonte-escura: #222;
+  --righteous: 'Righteous', cursive;
+  --sarala: 'Sarala', sans-serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--sarala);
+  background-color: var(--cor-fundo-claro);
+  color: var(--cor-fonte-escura);
+}
+
+/* Hero Section */
 .hero {
   height: 100vh;
-  width: 100vw; 
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
-  padding-top: 60px; 
+  padding-top: 60px;
   background-color: var(--cor-fundo-claro);
-  overflow: hidden; 
-}
-
-html, body {
-  background-color: #f5f5fa;
+  overflow: hidden;
 }
 
 .hero-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%; 
+  width: 100%;
   gap: 50px;
   padding: 0 20px;
 }
@@ -48,7 +65,7 @@ html, body {
   padding: 12px 24px;
   border-radius: 20px;
   font-size: 24px;
-  /* color: var(--cor-fonte-clara); */
+  color: var(--cor-fonte-clara);
   text-decoration: none;
   transition: 0.3s all ease-in-out;
 }
@@ -69,12 +86,12 @@ html, body {
   transform: scale(1.05);
 }
 
+/* Descrição */
 .desc {
   padding: 75px 20px;
-  background-color: var(--cor-fundo-escuro); 
+  background-color: var(--cor-fundo-escuro);
   text-align: center;
-  width: 100vw; 
-  margin-top: 0; 
+  width: 100vw;
 }
 
 .desc h3 {
@@ -90,13 +107,17 @@ html, body {
 }
 
 .desc-list p strong {
-  color: var(--cor-fonte-clara);
+  color: var(--cor-principal);
 }
 
-.dashboard-title{
+/* Dashboard */
+.dashboard-title {
   text-align: center;
+  font-size: 28px;
+  margin-bottom: 20px;
 }
 
+/* Ajustes responsivos */
 @media (max-width: 800px) {
   .hero-main {
     flex-direction: column;
@@ -127,4 +148,55 @@ html, body {
   .desc-list p {
     font-size: 14px;
   }
+}
+
+/* Adicionando compatibilidade com gráficos */
+.charts-container {
+  display: flex;
+  flex-wrap: wrap; /* Para garantir que gráficos sejam reposicionados em telas menores */
+  justify-content: center;
+  gap: 20px; /* Espaço entre os gráficos */
+  margin-top: 20px;
+}
+
+.chart {
+  flex: 0 1 300px; /* Define a largura fixa dos gráficos */
+  text-align: center;
+}
+
+/* Botões */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background-color: var(--cor-principal);
+  color: var(--cor-fonte-clara);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.button:hover {
+  background-color: var(--cor-marca-claro);
+}
+
+
+.dashboard {
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.charts-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.chart {
+  width: 300px;
+  text-align: center;
 }

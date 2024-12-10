@@ -1,161 +1,157 @@
-import React, { useState, useEffect } from "react";
-import { Bar, Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-import Gastos from "../components/crud/Gastos";
-import Footer from "../components/Footer";
+import React, { useEffect, useState } from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "../styles/dashboard.css";
-import "../styles/charts.css";
-import "../styles/crud.css";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(ArcElement, Tooltip, Legend);
 
-const Dashboard = () => {
-  const [exits, setExits] = useState([]); // Despesas
-  const [bankDetails, setBankDetails] = useState([]); // Bancos
-  const [categories, setCategories] = useState([]); // Categorias
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const API_URL_EXPENSES = "http://localhost:8000/api/expenses";
+const API_URL_BANKS = "http://localhost:8000/api/finance/banks";
+const API_URL_CATEGORIES = "http://localhost:8000/api/finance/categories";
 
-  // Função para buscar os dados
-  const fetchData = async () => {
+function Dashboard() {
+  const [expenses, setExpenses] = useState([]);
+  const [banks, setBanks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [categoryChartData, setCategoryChartData] = useState({});
+  const [bankChartData, setBankChartData] = useState({});
+
+  // Função para coletar despesas
+  const fetchExpenses = async () => {
+    const token = localStorage.getItem("access_token");
     try {
-      setLoading(true);
-      // Requisição para buscar as despesas
-      const responseExits = await fetch("http://localhost:8000/api/expenses");
-      if (!responseExits.ok) throw new Error("Erro ao buscar despesas.");
-      const dataExits = await responseExits.json();
-      setExits(dataExits);
+      const response = await fetch(API_URL_EXPENSES, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      // Requisição para buscar as categorias (caso seja necessária uma consulta específica)
-      const responseCategories = await fetch("http://localhost:8000/api/categories");
-      if (!responseCategories.ok) throw new Error("Erro ao buscar categorias.");
-      const dataCategories = await responseCategories.json();
-      setCategories(dataCategories);
-
-      // Requisição para buscar os bancos (caso seja necessária uma consulta específica)
-      const responseBanks = await fetch("http://localhost:8000/api/banks");
-      if (!responseBanks.ok) throw new Error("Erro ao buscar bancos.");
-      const dataBanks = await responseBanks.json();
-      setBankDetails(dataBanks);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      if (response.ok) {
+        const data = await response.json();
+        setExpenses(data);
+        generateChartData(data);
+      } else {
+        console.error("Erro ao buscar despesas.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar despesas:", error);
     }
   };
 
-  useEffect(() => {
-    fetchData(); // Carrega os dados ao montar o componente
-  }, []);
+  // Função para coletar bancos
+  const fetchBanks = async () => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const response = await fetch(API_URL_BANKS, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  // Função para calcular despesas por categoria
-  const calculateCategoryExpenses = () => {
-    if (!categories || !exits) return { labels: [], datasets: [] };
+      if (response.ok) {
+        const data = await response.json();
+        setBanks(data);
+      } else {
+        console.error("Erro ao buscar bancos.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar bancos:", error);
+    }
+  };
 
-    const categoryExpenseMap = {};
-    exits.forEach((exit) => {
+  // Função para coletar categorias
+  const fetchCategories = async () => {
+    const token = localStorage.getItem("access_token");
+    try {
+      const response = await fetch(API_URL_CATEGORIES, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      } else {
+        console.error("Erro ao buscar categorias.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error);
+    }
+  };
+
+  // Função para gerar os dados para os gráficos
+  const generateChartData = (expenses) => {
+    const categoryDataMap = {};
+    const bankDataMap = {};
+
+    expenses.forEach((expense) => {
       const categoryName =
-        categories.find((cat) => cat.id === exit.categoria)?.type || "Outros";
-      if (!categoryExpenseMap[categoryName]) {
-        categoryExpenseMap[categoryName] = 0;
-      }
-      categoryExpenseMap[categoryName] += exit.valor;
-    });
-
-    return {
-      labels: Object.keys(categoryExpenseMap),
-      datasets: [
-        {
-          label: "Gastos por Categoria",
-          data: Object.values(categoryExpenseMap),
-          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A"],
-          borderColor: "#ffffff",
-          borderWidth: 1,
-        },
-      ],
-    };
-  };
-
-  // Função para calcular despesas por banco
-  const calculateBankExpenses = () => {
-    if (!bankDetails || !exits) return { labels: [], datasets: [] };
-
-    const bankExpenseMap = {};
-    exits.forEach((exit) => {
+        categories.find((category) => category.id === expense.categoria_id)
+          ?.nome || "Outros";
       const bankName =
-        bankDetails.find((bank) => bank.id === exit.bancoId)?.name || "Outros";
-      if (!bankExpenseMap[bankName]) {
-        bankExpenseMap[bankName] = 0;
-      }
-      bankExpenseMap[bankName] += exit.valor;
+        banks.find((bank) => bank.id === expense.banco_id)?.nome || "Outros";
+
+      categoryDataMap[categoryName] =
+        (categoryDataMap[categoryName] || 0) + parseFloat(expense.valor);
+
+      bankDataMap[bankName] =
+        (bankDataMap[bankName] || 0) + parseFloat(expense.valor);
     });
 
-    return {
-      labels: Object.keys(bankExpenseMap),
+    setCategoryChartData({
+      labels: Object.keys(categoryDataMap),
       datasets: [
         {
-          data: Object.values(bankExpenseMap),
+          data: Object.values(categoryDataMap),
           backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A"],
-          borderColor: "#ffffff",
-          borderWidth: 1,
         },
       ],
-    };
+    });
+
+    setBankChartData({
+      labels: Object.keys(bankDataMap),
+      datasets: [
+        {
+          data: Object.values(bankDataMap),
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A"],
+        },
+      ],
+    });
   };
 
-  const categoryChartData = calculateCategoryExpenses();
-  const bankChartData = calculateBankExpenses();
+  useEffect(() => {
+    fetchBanks();
+    fetchCategories();
+    fetchExpenses();
+  }, [categories, banks]);
 
   return (
     <div className="dashboard">
-      <h2 className="dashboard-title">Dashboard de Gastos</h2>
-
-      {loading && <p>Carregando...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
-        <div style={{ width: "35%" }}>
-          <h3 style={{ textAlign: "center" }}>Gastos por Categoria</h3>
-          {categoryChartData.labels && categoryChartData.labels.length > 0 ? (
+      <h2>Dashboard</h2>
+      <div className="charts-container">
+        <div className="chart">
+          <h3>Gastos por Categoria</h3>
+          {categoryChartData.labels ? (
             <Pie data={categoryChartData} />
           ) : (
-            <p>Nenhum dado disponível</p>
+            <p>Carregando dados...</p>
           )}
         </div>
-        <div style={{ width: "35%" }}>
-          <h3 style={{ textAlign: "center" }}>Gastos por Banco</h3>
-          {bankChartData.labels && bankChartData.labels.length > 0 ? (
+        <div className="chart">
+          <h3>Gastos por Banco</h3>
+          {bankChartData.labels ? (
             <Pie data={bankChartData} />
           ) : (
-            <p>Nenhum dado disponível</p>
+            <p>Carregando dados...</p>
           )}
-        </div>
-      </div>
-
-      <div className="crud-wrapper">
-        <div className="crud-section">
-          <Gastos exits={exits} setExits={setExits} categories={categories} bankDetails={bankDetails} />
-          <Footer />
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Dashboard;

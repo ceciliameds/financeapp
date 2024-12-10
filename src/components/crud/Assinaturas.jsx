@@ -10,59 +10,36 @@ import "../../styles/gastos.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const API_URL = "http://localhost:8000/api/finance/subscriptions";
+const API_URL_SUBSCRIPTIONS = "http://localhost:8000/api/finance/subscriptions";
+const API_URL_BANKS = "http://localhost:8000/api/finance/banks";
+const API_URL_CATEGORIES = "http://localhost:8000/api/finance/categories";
 
-function Gastos() {
-  const [exits, setExits] = useState([]);
-  const [categories, setCategories] = useState([
-    { id: 1, type: "Alimentação" },
-    { id: 2, type: "Saúde" },
-    { id: 3, type: "Lazer" },
-    { id: 4, type: "Estudo" },
-    { id: 5, type: "Transporte" },
-    { id: 6, type: "Viagens" },
-    { id: 7, type: "Moradia" },
-    { id: 8, type: "Assinaturas" },
-    { id: 9, type: "Outros" },
-  ]);
-  const [banks, setBanks] = useState([
-    { id: 1, name: "Nubank" },
-    { id: 2, name: "Banco do Brasil" },
-    { id: 3, name: "Itaú" },
-    { id: 4, name: "Santander" },
-    { id: 5, name: "Bradesco" },
-    { id: 6, name: "Caixa" },
-    { id: 7, name: "Inter" },
-    { id: 8, name: "Original" },
-    { id: 9, name: "Next" },
-    { id: 10, name: "Outros" },
-  ]);
+function Assinaturas() {
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [banks, setBanks] = useState([]);
   const [form, setForm] = useState({
-    categoria: "",
-    nome: "",
+    nome_assinatura: "",
     valor: "",
-    data: "",
-    banco: "",
+    vencimento: "",
+    banco_id: "",
+    categoria_id: "",
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
 
   const [categoryChartData, setCategoryChartData] = useState({});
   const [bankChartData, setBankChartData] = useState({});
 
-  // Função para buscar o token atualizado do localStorage
   const getToken = () => localStorage.getItem("access_token");
 
-  const fetchExits = async () => {
+  const fetchSubscriptions = async () => {
     const token = getToken();
-
     if (!token) {
       alert("Token não encontrado. Por favor, faça login.");
       return;
     }
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL_SUBSCRIPTIONS, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -71,140 +48,176 @@ function Gastos() {
 
       if (response.ok) {
         const data = await response.json();
-        setExits(data);
+        setSubscriptions(data);
+        generateChartData(data);
       } else {
-        alert("Erro ao carregar os gastos.");
+        alert("Erro ao carregar assinaturas.");
       }
     } catch (error) {
-      alert("Erro ao carregar os gastos.");
+      console.error("Erro ao carregar assinaturas:", error);
     }
   };
 
-  const handleAddExpense = async () => {
+  const fetchBanks = async () => {
     const token = getToken();
-
     if (!token) {
       alert("Token não encontrado. Por favor, faça login.");
       return;
     }
 
-    const expenseData = {
-      categoria: form.categoria,
-      nome: form.nome,
-      valor: parseFloat(form.valor),
-      data: form.data,
-      banco: form.banco,
-    };
+    try {
+      const response = await fetch(API_URL_BANKS, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setBanks(data);
+      } else {
+        alert("Erro ao carregar bancos.");
+      }
+    } catch (error) {
+      console.error("Erro ao carregar bancos:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    const token = getToken();
+    if (!token) {
+      alert("Token não encontrado. Por favor, faça login.");
+      return;
+    }
 
     try {
-      const response = await fetch(API_URL, {
-        method: isEditing ? "PUT" : "POST",
+      const response = await fetch(API_URL_CATEGORIES, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      } else {
+        alert("Erro ao carregar categorias.");
+      }
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+    }
+  };
+
+  const generateChartData = (data) => {
+    const categoryDataMap = {};
+    const bankDataMap = {};
+
+    data.forEach((item) => {
+      const categoryName =
+        categories.find((category) => category.id === item.categoria_id)?.nome ||
+        "Outros";
+      const bankName =
+        banks.find((bank) => bank.id === item.banco_id)?.nome || "Outros";
+
+      categoryDataMap[categoryName] =
+        (categoryDataMap[categoryName] || 0) + parseFloat(item.valor);
+      bankDataMap[bankName] =
+        (bankDataMap[bankName] || 0) + parseFloat(item.valor);
+    });
+
+    setCategoryChartData({
+      labels: Object.keys(categoryDataMap),
+      datasets: [
+        {
+          data: Object.values(categoryDataMap),
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A"],
+        },
+      ],
+    });
+
+    setBankChartData({
+      labels: Object.keys(bankDataMap),
+      datasets: [
+        {
+          data: Object.values(bankDataMap),
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#F7464A"],
+        },
+      ],
+    });
+  };
+
+  const handleAddSubscription = async () => {
+    const token = getToken();
+    if (!token) {
+      alert("Token não encontrado. Por favor, faça login.");
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL_SUBSCRIPTIONS, {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(expenseData),
+        body: JSON.stringify(form),
       });
 
       if (response.ok) {
-        fetchExits(); // Atualiza a lista de gastos
+        fetchSubscriptions();
         setForm({
-          categoria: "",
-          nome: "",
+          nome_assinatura: "",
           valor: "",
-          data: "",
-          banco: "",
+          vencimento: "",
+          banco_id: "",
+          categoria_id: "",
         });
-        setIsEditing(false);
-        setEditIndex(null);
       } else {
-        alert("Erro ao salvar o gasto.");
+        alert("Erro ao adicionar assinatura.");
       }
     } catch (error) {
-      alert("Erro ao salvar o gasto.");
-    }
-  };
-
-  const handleDeleteExpense = async (index) => {
-    const token = getToken();
-
-    if (!token) {
-      alert("Token não encontrado. Por favor, faça login.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/${index}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        fetchExits(); // Atualiza a lista de gastos
-      } else {
-        alert("Erro ao excluir o gasto.");
-      }
-    } catch (error) {
-      alert("Erro ao excluir o gasto.");
+      console.error("Erro ao adicionar assinatura:", error);
     }
   };
 
   useEffect(() => {
-    fetchExits();
+    fetchSubscriptions();
+    fetchBanks();
+    fetchCategories();
   }, []);
 
   return (
-    <div className="gastos">
+    <div className="assinaturas">
       <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
         <div style={{ width: "35%" }}>
-          <h3 style={{ textAlign: "center" }}>Gastos por Categoria Mensal</h3>
+          <h3>Assinaturas por Categoria</h3>
           {categoryChartData.labels ? (
             <Pie data={categoryChartData} />
           ) : (
-            <p>Nenhum dado disponível</p>
+            <p>Carregando dados...</p>
           )}
         </div>
         <div style={{ width: "35%" }}>
-          <h3 style={{ textAlign: "center" }}>Gastos por Banco Mensal</h3>
+          <h3>Assinaturas por Banco</h3>
           {bankChartData.labels ? (
             <Pie data={bankChartData} />
           ) : (
-            <p>Nenhum dado disponível</p>
+            <p>Carregando dados...</p>
           )}
         </div>
       </div>
 
-      <h2>Adicionar Gasto</h2>
+      <h2>Adicionar Assinatura</h2>
       <div className="form-group">
-        <select
-          value={form.categoria}
-          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
-        >
-          <option value="">Selecione uma Categoria</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.type}>
-              {cat.type}
-            </option>
-          ))}
-        </select>
-        <select
-          value={form.banco}
-          onChange={(e) => setForm({ ...form, banco: e.target.value })}
-        >
-          <option value="">Selecione um Banco</option>
-          {banks.map((bank) => (
-            <option key={bank.id} value={bank.name}>
-              {bank.name}
-            </option>
-          ))}
-        </select>
         <input
           type="text"
-          placeholder="Nome"
-          value={form.nome}
-          onChange={(e) => setForm({ ...form, nome: e.target.value })}
+          placeholder="Nome da Assinatura"
+          value={form.nome_assinatura}
+          onChange={(e) =>
+            setForm({ ...form, nome_assinatura: e.target.value })
+          }
         />
         <input
           type="number"
@@ -214,27 +227,39 @@ function Gastos() {
         />
         <input
           type="date"
-          value={form.data}
-          onChange={(e) => setForm({ ...form, data: e.target.value })}
+          value={form.vencimento}
+          onChange={(e) => setForm({ ...form, vencimento: e.target.value })}
         />
-        <button className="add-button" onClick={handleAddExpense}>
-          {isEditing ? "Salvar Alterações" : "Adicionar Gasto"}
-        </button>
+        <select
+          value={form.categoria_id}
+          onChange={(e) => setForm({ ...form, categoria_id: e.target.value })}
+        >
+          <option value="">Selecione uma Categoria</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.nome}
+            </option>
+          ))}
+        </select>
+        <select
+          value={form.banco_id}
+          onChange={(e) => setForm({ ...form, banco_id: e.target.value })}
+        >
+          <option value="">Selecione um Banco</option>
+          {banks.map((bank) => (
+            <option key={bank.id} value={bank.id}>
+              {bank.nome}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleAddSubscription}>Adicionar Assinatura</button>
       </div>
 
-      <ul className="gastos-list">
-        {exits.map((g, index) => (
-          <li key={index} className="gasto-item">
-            {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} -{" "}
-            {new Date(g.data).toLocaleDateString("pt-BR")}
-            <div className="action-buttons">
-              <button className="edit-button" onClick={() => handleEditExpense(index)}>
-                Editar
-              </button>
-              <button className="delete-button" onClick={() => handleDeleteExpense(index)}>
-                Deletar
-              </button>
-            </div>
+      <ul>
+        {subscriptions.map((sub) => (
+          <li key={sub.id}>
+            {sub.nome_assinatura} - R$ {sub.valor} - Vencimento:{" "}
+            {new Date(sub.vencimento).toLocaleDateString("pt-BR")}
           </li>
         ))}
       </ul>
@@ -242,4 +267,4 @@ function Gastos() {
   );
 }
 
-export default Gastos;
+export default Assinaturas;

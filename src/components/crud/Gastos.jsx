@@ -1,68 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import "../../styles/gastos.css";
+import "../../styles/crud.css";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+const API_URL_EXPENSES = "http://localhost:8000/api/expenses";
+const API_URL_BANKS = "http://localhost:8000/api/finance/banks";
+const API_URL_CATEGORIES = "http://localhost:8000/api/finance/categories";
 
-const API_URL = "http://localhost:8000/api/expenses";
-
-function Gastos() {
-  const [exits, setExits] = useState([]);
-  const [categories, setCategories] = useState([
-    { id: 1, type: "Alimentação" },
-    { id: 2, type: "Saúde" },
-    { id: 3, type: "Lazer" },
-    { id: 4, type: "Estudo" },
-    { id: 5, type: "Transporte" },
-    { id: 6, type: "Viagens" },
-    { id: 7, type: "Moradia" },
-    { id: 8, type: "Assinaturas" },
-    { id: 9, type: "Outros" },
-  ]);
-  const [banks, setBanks] = useState([
-    { id: 1, name: "Nubank" },
-    { id: 2, name: "Banco do Brasil" },
-    { id: 3, name: "Itaú" },
-    { id: 4, name: "Santander" },
-    { id: 5, name: "Bradesco" },
-    { id: 6, name: "Caixa" },
-    { id: 7, name: "Inter" },
-    { id: 8, name: "Original" },
-    { id: 9, name: "Next" },
-    { id: 10, name: "Outros" },
-  ]);
+function Gastos({ onExpensesUpdate }) {
+  const [expenses, setExpenses] = useState([]);
+  const [banks, setBanks] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({
-    categoria: "",
+    categoria_id: "",
     nome: "",
     valor: "",
     data: "",
-    banco: "",
+    banco_id: "",
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
 
-  const [categoryChartData, setCategoryChartData] = useState({});
-  const [bankChartData, setBankChartData] = useState({});
-
-  // Função para buscar o token atualizado do localStorage
-  const getToken = () => localStorage.getItem("access_token");
-
-  const fetchExits = async () => {
-    const token = getToken();
-
-    if (!token) {
-      alert("Token não encontrado. Por favor, faça login.");
-      return;
-    }
+  const fetchExpenses = async () => {
+    const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(API_URL, {
+      const response = await fetch(API_URL_EXPENSES, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -71,70 +30,96 @@ function Gastos() {
 
       if (response.ok) {
         const data = await response.json();
-        setExits(data);
+        setExpenses(data);
+        if (onExpensesUpdate) onExpensesUpdate(data); // Atualiza o Dashboard com dados completos
       } else {
-        alert("Erro ao carregar os gastos.");
+        console.error("Erro ao buscar gastos.");
       }
     } catch (error) {
-      alert("Erro ao carregar os gastos.");
+      console.error("Erro ao buscar gastos:", error);
+    }
+  };
+
+  const fetchBanks = async () => {
+    const token = localStorage.getItem("access_token");
+
+    try {
+      const response = await fetch(API_URL_BANKS, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setBanks(data);
+      } else {
+        console.error("Erro ao buscar bancos.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar bancos:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    const token = localStorage.getItem("access_token");
+
+    try {
+      const response = await fetch(API_URL_CATEGORIES, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCategories(data);
+      } else {
+        console.error("Erro ao buscar categorias.");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar categorias:", error);
     }
   };
 
   const handleAddExpense = async () => {
-    const token = getToken();
-
-    if (!token) {
-      alert("Token não encontrado. Por favor, faça login.");
-      return;
-    }
-
-    const expenseData = {
-      categoria: form.categoria,
-      nome: form.nome,
-      valor: parseFloat(form.valor),
-      data: form.data,
-      banco: form.banco,
-    };
+    const token = localStorage.getItem("access_token");
+    const payload = { ...form };
 
     try {
-      const response = await fetch(API_URL, {
-        method: isEditing ? "PUT" : "POST",
+      const response = await fetch(API_URL_EXPENSES, {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(expenseData),
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
-        fetchExits(); // Atualiza a lista de gastos
+        fetchExpenses(); // Atualiza a lista de gastos
         setForm({
-          categoria: "",
+          categoria_id: "",
           nome: "",
           valor: "",
           data: "",
-          banco: "",
+          banco_id: "",
         });
-        setIsEditing(false);
-        setEditIndex(null);
       } else {
-        alert("Erro ao salvar o gasto.");
+        console.error("Erro ao adicionar gasto.");
       }
     } catch (error) {
-      alert("Erro ao salvar o gasto.");
+      console.error("Erro ao adicionar gasto:", error);
     }
   };
 
-  const handleDeleteExpense = async (index) => {
-    const token = getToken();
-
-    if (!token) {
-      alert("Token não encontrado. Por favor, faça login.");
-      return;
-    }
+  const handleDeleteExpense = async (id) => {
+    const token = localStorage.getItem("access_token");
 
     try {
-      const response = await fetch(`${API_URL}/${index}`, {
+      const response = await fetch(`${API_URL_EXPENSES}/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -142,67 +127,52 @@ function Gastos() {
       });
 
       if (response.ok) {
-        fetchExits(); // Atualiza a lista de gastos
+        fetchExpenses(); // Atualiza a lista de gastos
       } else {
-        alert("Erro ao excluir o gasto.");
+        console.error("Erro ao excluir gasto.");
       }
     } catch (error) {
-      alert("Erro ao excluir o gasto.");
+      console.error("Erro ao excluir gasto:", error);
     }
   };
 
   useEffect(() => {
-    fetchExits();
+    fetchExpenses();
+    fetchBanks();
+    fetchCategories();
   }, []);
 
   return (
     <div className="gastos">
-      <div className="charts" style={{ display: "flex", justifyContent: "space-around" }}>
-        <div style={{ width: "35%" }}>
-          <h3 style={{ textAlign: "center" }}>Gastos por Categoria Mensal</h3>
-          {categoryChartData.labels ? (
-            <Pie data={categoryChartData} />
-          ) : (
-            <p>Nenhum dado disponível</p>
-          )}
-        </div>
-        <div style={{ width: "35%" }}>
-          <h3 style={{ textAlign: "center" }}>Gastos por Banco Mensal</h3>
-          {bankChartData.labels ? (
-            <Pie data={bankChartData} />
-          ) : (
-            <p>Nenhum dado disponível</p>
-          )}
-        </div>
-      </div>
-
       <h2>Adicionar Gasto</h2>
       <div className="form-group">
         <select
-          value={form.categoria}
-          onChange={(e) => setForm({ ...form, categoria: e.target.value })}
+          value={form.categoria_id}
+          onChange={(e) => setForm({ ...form, categoria_id: e.target.value })}
         >
           <option value="">Selecione uma Categoria</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.type}>
-              {cat.type}
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.nome}
             </option>
           ))}
         </select>
+
         <select
-          value={form.banco}
-          onChange={(e) => setForm({ ...form, banco: e.target.value })}
+          value={form.banco_id}
+          onChange={(e) => setForm({ ...form, banco_id: e.target.value })}
         >
           <option value="">Selecione um Banco</option>
           {banks.map((bank) => (
-            <option key={bank.id} value={bank.name}>
-              {bank.name}
+            <option key={bank.id} value={bank.id}>
+              {bank.nome}
             </option>
           ))}
         </select>
+
         <input
           type="text"
-          placeholder="Nome"
+          placeholder="Nome do Gasto"
           value={form.nome}
           onChange={(e) => setForm({ ...form, nome: e.target.value })}
         />
@@ -218,26 +188,34 @@ function Gastos() {
           onChange={(e) => setForm({ ...form, data: e.target.value })}
         />
         <button className="add-button" onClick={handleAddExpense}>
-          {isEditing ? "Salvar Alterações" : "Adicionar Gasto"}
+          Adicionar Gasto
         </button>
       </div>
 
-      <ul className="gastos-list">
-        {exits.map((g, index) => (
-          <li key={index} className="gasto-item">
-            {g.nome} - {g.categoria} - {g.banco} - R$ {g.valor} -{" "}
-            {new Date(g.data).toLocaleDateString("pt-BR")}
-            <div className="action-buttons">
-              <button className="edit-button" onClick={() => handleEditExpense(index)}>
-                Editar
-              </button>
-              <button className="delete-button" onClick={() => handleDeleteExpense(index)}>
-                Deletar
-              </button>
+      <h2>Gastos Cadastrados</h2>
+      <div className="gastos-list">
+        {expenses.map((expense) => (
+          <div key={expense.id} className="gasto-item">
+            <div>
+              <strong>Nome:</strong> {expense.nome} <br />
+              <strong>Categoria:</strong>{" "}
+              {categories.find((cat) => cat.id === expense.categoria_id)?.nome || "N/A"}{" "}
+              <br />
+              <strong>Banco:</strong>{" "}
+              {banks.find((bank) => bank.id === expense.banco_id)?.nome || "N/A"} <br />
+              <strong>Valor:</strong> R$ {expense.valor} <br />
+              <strong>Data:</strong>{" "}
+              {new Date(expense.data).toLocaleDateString("pt-BR")}
             </div>
-          </li>
+            <button
+              className="delete-button"
+              onClick={() => handleDeleteExpense(expense.id)}
+            >
+              Excluir
+            </button>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
