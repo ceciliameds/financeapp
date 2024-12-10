@@ -39,7 +39,7 @@ A Licença MIT permite que você use, modifique, copie e distribua o código des
 
 <br>
 
-### 📬 Contato
+## 📬 Contato
 
 Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
 <ul>
