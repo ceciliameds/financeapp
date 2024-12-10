@@ -39,14 +39,16 @@ A Licença MIT permite que você use, modifique, copie e distribua o código des
 ### 📬 Contato
 
 Se você tiver dúvidas, sugestões ou feedback, sinta-se à vontade para entrar em contato com os desenvolvedores do projeto:
-
-Juan Pablo
+<ul>
+<li><b> Juan Pablo </b> <br></li>
 📧 jphferreira@outlook.com
 
-Maria Cecília
+<li><b> Maria Cecília </b> </li>
 📧 [Insira aqui o email da Maria Cecília]
 
-Marcelo Melo
+<li><b> Marcelo Melo </b> </li>
 📧 [Insira aqui o email do Marcelo Melo]
+
+</ul>
 
 
